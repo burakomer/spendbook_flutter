@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kuma_app/utils/extensions.dart';
 
 class ModelForm extends StatefulWidget {
   final List<Widget> fields;
@@ -21,11 +22,12 @@ class ModelFormState extends State<ModelForm> {
       key: _formKey,
       child: Column(
         children: widget.fields
-            .map((e) => Padding(
+            .map<Widget>((e) => Padding(
                   padding: EdgeInsets.symmetric(vertical: 4.0),
                   child: e,
                 ))
-            .toList(),
+            .toList()
+            .topPadding(context),
       ),
     );
   }

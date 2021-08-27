@@ -2,10 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:kuma_app/data/models/expense.dart';
+import 'package:kuma_app/widgets/pages/tab_page_scaffold.dart';
+import 'package:kuma_app/widgets/pages/tab_scaffold.dart';
 
-import 'expense_page.dart';
-import 'settings_page.dart';
-import 'summary_page.dart';
+import 'app_scaffold.dart';
+import 'expense_tab.dart';
+import 'settings_tab.dart';
+import 'summary_tab.dart';
 
 enum MainPageTabs {
   Summary,
@@ -21,32 +25,23 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  int _tabIndex = 0;
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: _tabIndex,
-        children: _buildTabs(),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _tabIndex,
-        onTap: (value) => setState(() => _tabIndex = value),
-        items: [
-          BottomNavigationBarItem(icon: FaIcon(FontAwesomeIcons.chartPie), label: describeEnum(MainPageTabs.Summary)),
-          BottomNavigationBarItem(icon: FaIcon(FontAwesomeIcons.moneyBill), label: describeEnum(MainPageTabs.Expenses)),
-          BottomNavigationBarItem(icon: FaIcon(FontAwesomeIcons.cog), label: describeEnum(MainPageTabs.Settings)),
-        ],
-      ),
+    return TabPageScaffold(
+      tabBuilder: _buildTabs,
+      tabButtons: [
+        BottomNavigationBarItem(icon: FaIcon(FontAwesomeIcons.chartPie), label: describeEnum(MainPageTabs.Summary)),
+        BottomNavigationBarItem(icon: FaIcon(FontAwesomeIcons.moneyBill), label: describeEnum(MainPageTabs.Expenses)),
+        BottomNavigationBarItem(icon: FaIcon(FontAwesomeIcons.cog), label: describeEnum(MainPageTabs.Settings)),
+      ],
     );
   }
 
-  List<Widget> _buildTabs() {
+  List<TabScaffold> _buildTabs(BuildContext context) {
     return [
-      SummaryTab(),
-      ExpenseTab(),
-      SettingsTab(),
+      SummaryTab.getTabScaffold(context),
+      ExpenseTab.getTabScaffold(context),
+      SettingsTab.getTabScaffold(context),
     ];
   }
 }

@@ -23,42 +23,13 @@ abstract class BaseDetailPageState<S extends BaseDetailPage> extends State<S> {
         ),
       ),
       actions: [
-        ActionMenuButton(
-          actions: [
-            TextButton.icon(
-              onPressed: () {},
-              icon: FaIcon(FontAwesomeIcons.save),
-              label: Text("Save"),
-            )
-          ],
+        IconButton(
+          onPressed: () {},
+          icon: FaIcon(FontAwesomeIcons.save),
         ),
       ],
     );
   }
 
   List<Widget> buildFields();
-}
-
-class ActionMenuButton extends StatelessWidget {
-  final List<Widget> actions;
-  const ActionMenuButton({
-    Key? key,
-    required this.actions,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return PopupMenuButton(
-      icon: FaIcon(FontAwesomeIcons.ellipsisV),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      offset: Offset(0.0, 50.0),
-      itemBuilder: (context) {
-        return actions
-            .map(
-              (e) => PopupMenuItem(child: e),
-            )
-            .toList();
-      },
-    );
-  }
 }

@@ -15,6 +15,7 @@ class SimpleModelList<M extends BaseModel> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      padding: EdgeInsets.zero,
       itemCount: items.length,
       itemBuilder: (context, index) => itemBuilder(context, index, items[index]),
     );

@@ -22,10 +22,6 @@ class GenericTextField extends StatelessWidget {
       controller: _controller,
       decoration: InputDecoration(
         labelText: labelText,
-        suffixIcon: IconButton(
-          icon: FaIcon(FontAwesomeIcons.times),
-          onPressed: () => _controller.clear(),
-        ),
       ),
       onSaved: (value) {
         onSaved(value ?? "");

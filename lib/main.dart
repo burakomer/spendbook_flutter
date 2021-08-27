@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'data/models/expense.dart';
@@ -11,41 +12,27 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Colors.deepOrange;
-    final accentColor = Colors.deepOrangeAccent;
-    final brightness = Brightness.light;
+    final primaryColor = Colors.deepPurple;
 
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: primaryColor,
-        brightness: brightness,
-        primaryColor: primaryColor,
-        accentColor: accentColor,
-        appBarTheme: AppBarTheme(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          titleTextStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.w900, fontSize: 32.0),
-          elevation: 1.0,
-          centerTitle: false,
-          actionsIconTheme: IconThemeData(color: primaryColor),
-          iconTheme: IconThemeData(color: primaryColor),
-        ),
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          selectedItemColor: primaryColor,
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(),
-          isDense: true,
-        ),
+    final darkColor = Colors.black;
+    final lightColor = Colors.white;
+
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: MaterialApp(
+        title: 'Kuma App',
+        debugShowCheckedModeBanner: false,
+        themeMode: ThemeMode.system,
+        theme: AppTheme.getAppTheme(primaryColor: primaryColor, modeColor: lightColor, brightness: Brightness.light),
+        darkTheme: AppTheme.getAppTheme(primaryColor: primaryColor, modeColor: darkColor, brightness: Brightness.dark),
+        home: MainPage(),
+        onGenerateRoute: generateRoute,
       ),
-      home: MainPage(),
-      onGenerateRoute: generateRoute,
     );
   }
 }
 
-class AppRoute<T> extends MaterialPageRoute<T> {
+class AppRoute<T> extends CupertinoPageRoute<T> {
   AppRoute({
     required WidgetBuilder builder,
     RouteSettings? settings,
@@ -53,28 +40,59 @@ class AppRoute<T> extends MaterialPageRoute<T> {
           builder: builder,
           settings: settings,
         );
-
-  @override
-  Widget buildTransitions(
-    BuildContext context,
-    Animation<double> animation,
-    Animation<double> secondaryAnimation,
-    Widget child,
-  ) {
-    return new FadeTransition(opacity: animation, child: child);
-  }
 }
 
 Route? generateRoute(RouteSettings settings) {
   final routeName = settings.name;
   final arguments = settings.arguments;
 
-  final defaultRoute = AppRoute(builder: (_) => MainPage(),);
+  final defaultRoute = AppRoute(
+    builder: (_) => MainPage(),
+  );
 
   switch (routeName) {
     case "/expense_detail":
       return (arguments is Expense) ? AppRoute(builder: (_) => ExpenseDetailPage(item: arguments)) : defaultRoute;
     default:
       return defaultRoute;
+  }
+}
+
+class AppTheme {
+  static getAppTheme({
+    required MaterialColor primaryColor,
+    required Color modeColor,
+    required Brightness brightness,
+  }) {
+    return ThemeData(
+      pageTransitionsTheme: PageTransitionsTheme(builders: {
+        TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+      }),
+      primarySwatch: primaryColor,
+      brightness: brightness,
+      scaffoldBackgroundColor: modeColor,
+      appBarTheme: AppBarTheme(
+        color: modeColor.withAlpha(1),
+        titleTextStyle: TextStyle(color: _getContrastingTextColorFor(modeColor), fontWeight: FontWeight.w900, fontSize: 32.0),
+        elevation: 0.0,
+        centerTitle: false,
+        actionsIconTheme: IconThemeData(color: primaryColor),
+        iconTheme: IconThemeData(color: primaryColor),
+      ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: modeColor.withAlpha(1),
+        selectedItemColor: primaryColor,
+        elevation: 0.0,
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        border: OutlineInputBorder(),
+        isDense: true,
+      ),
+    );
+  }
+
+  static Color _getContrastingTextColorFor(Color color) {
+    return color.computeLuminance() > 0.6 ? Colors.black : Colors.white;
   }
 }
