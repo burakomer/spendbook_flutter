@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AppScaffold extends StatelessWidget {
   final String title;
@@ -9,6 +8,7 @@ class AppScaffold extends StatelessWidget {
   final Widget? bottomBar;
   final List<Widget>? actions;
   final List<Widget>? bottomActions;
+  final Widget? floatingActionButton;
 
   final bool hasScaffold;
 
@@ -19,6 +19,7 @@ class AppScaffold extends StatelessWidget {
     this.bottomBar,
     this.actions,
     this.bottomActions,
+    this.floatingActionButton,
   })  : hasScaffold = false,
         super(key: key);
 
@@ -29,14 +30,13 @@ class AppScaffold extends StatelessWidget {
     this.bottomBar,
     this.actions,
     this.bottomActions,
+    this.floatingActionButton,
   })  : hasScaffold = true,
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final canPop = Navigator.of(context).canPop();
-
-    final blurFilter = ImageFilter.blur(sigmaX: 13.0, sigmaY: 13.0);
 
     final appBar = AppBar(
       title: Text(
@@ -54,56 +54,31 @@ class AppScaffold extends StatelessWidget {
     );
 
     return Scaffold(
-      extendBody: true,
-      extendBodyBehindAppBar: true,
-      //resizeToAvoidBottomInset: true,
-      appBar: PreferredSize(
-        child: Container(
-          child: ClipRRect(
-            child: BackdropFilter(
-              filter: blurFilter,
-              child: appBar,
-            ),
-          ),
-        ),
-        preferredSize: Size.fromHeight(appBar.preferredSize.height),
-      ),
-      body: _getBody(context, appBar.preferredSize.height),
-      bottomNavigationBar: bottomBar != null || bottomActions != null
-          ? Container(
-              child: ClipRRect(
-                child: BackdropFilter(
-                  filter: blurFilter,
-                  child: bottomBar ??
-                      Theme(
-                        data: Theme.of(context).copyWith(iconTheme: IconThemeData(color: Theme.of(context).primaryColor)),
-                        child: BottomAppBar(
-                          child: Row(
-                            children: bottomActions!,
-                          ),
-                        ),
+      appBar: appBar,
+      body: body,
+      bottomNavigationBar: bottomBar ??
+          (bottomActions != null
+              ? Theme(
+                  data: Theme.of(context).copyWith(iconTheme: IconThemeData(color: Theme.of(context).primaryColor)),
+                  child: BottomAppBar(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Row(
+                        children: bottomActions!,
                       ),
-                ),
-              ),
-            )
-          : null,
+                    ),
+                  ),
+                )
+              : null),
+      floatingActionButton: floatingActionButton,
     );
-  }
-
-  Widget _getBody(BuildContext context, double appBarHeight) {
-    final topPadding = appBarHeight + MediaQuery.of(context).padding.top;
-    return body;
-    // : Container(
-    //     padding: EdgeInsets.only(top: topPadding),
-    //     child: body,
-    //   );
   }
 
   Widget? _getLeading(BuildContext context) {
     return Navigator.of(context).canPop()
         ? IconButton(
             onPressed: () => Navigator.of(context).maybePop(),
-            icon: FaIcon(FontAwesomeIcons.chevronLeft),
+            icon: Icon(Icons.chevron_left),
           )
         : null;
   }

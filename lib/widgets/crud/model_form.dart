@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:kuma_app/utils/extensions.dart';
+import 'package:kuma_app/data/models/base_model.dart';
 
-class ModelForm extends StatefulWidget {
+import '../../dwarf/widgets/components/form_card.dart';
+import '../../utils/extensions.dart';
+
+class ModelForm<M extends BaseModel> extends StatefulWidget {
   final List<Widget> fields;
+  final M item;
+  final M Function() getCurrentModel;
 
   const ModelForm({
     GlobalKey<ModelFormState>? key,
     required this.fields,
+    required this.item,
+    required this.getCurrentModel,
   }) : super(key: key);
 
   @override
@@ -18,16 +25,18 @@ class ModelFormState extends State<ModelForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: widget.fields
-            .map<Widget>((e) => Padding(
-                  padding: EdgeInsets.symmetric(vertical: 4.0),
-                  child: e,
-                ))
-            .toList()
-            .topPadding(context),
+    return FormCard(
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: widget.fields
+              .map<Widget>((e) => Padding(
+                    padding: EdgeInsets.symmetric(vertical: 4.0),
+                    child: e,
+                  ))
+              .toList()
+              .putInBetween(Divider(height: 0)),
+        ),
       ),
     );
   }
@@ -37,6 +46,12 @@ class ModelFormState extends State<ModelForm> {
     if (formState == null || !formState.validate()) return;
 
     formState.save();
+
+    final itemToSave = widget.getCurrentModel();
+
+    if (itemToSave != widget.item) {
+      // Save.
+    }
 
     return await Future.delayed(Duration(seconds: 1));
   }

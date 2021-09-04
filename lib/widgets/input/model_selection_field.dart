@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ModelSelectionField<M> extends StatelessWidget {
   final String labelText;
@@ -7,7 +6,7 @@ class ModelSelectionField<M> extends StatelessWidget {
   final String initialValue;
   final String routeName;
   final void Function(M) onSelected;
-  final FaIcon Function(int)? iconMapper;
+  final Icon Function(int)? iconMapper;
 
   final _controller = TextEditingController();
 
@@ -46,10 +45,7 @@ class ModelSelectionField<M> extends StatelessWidget {
                     onPressed: null,
                   ),
         labelText: labelText,
-        suffixIcon: IconButton(
-          icon: FaIcon(FontAwesomeIcons.chevronRight),
-          onPressed: onTap,
-        ),
+        suffixIcon: Icon(Icons.chevron_right),
       ),
       onTap: onTap,
     );

@@ -1,50 +1,112 @@
 import 'package:flutter/material.dart';
+import 'package:kuma_app/widgets/crud/model_form.dart';
 
 import '../../data/models/expense.dart';
 import '../../data/models/expense_category.dart';
 import '../input/generic_text_field.dart';
 import '../input/model_selection_field.dart';
-import 'base/base_detail_page.dart';
-import 'expense_category_page.dart';
+import 'base/simple_detail_page.dart';
 
-class ExpenseDetailPage extends BaseDetailPage {
+class ExpenseDetailPage extends StatefulWidget {
   final Expense item;
 
-  ExpenseDetailPage({Key? key, required this.item}) : super(key: key);
+  ExpenseDetailPage({
+    Key? key,
+    required this.item,
+  }) : super(key: key);
 
   @override
   _ExpenseDetailPageState createState() => _ExpenseDetailPageState(item);
 }
 
-class _ExpenseDetailPageState extends BaseDetailPageState<ExpenseDetailPage> {
+class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
   final Expense item;
+  final formKey = GlobalKey<ModelFormState>();
 
   late int _id;
+  late String _name;
   late int _categoryId;
   late String _categoryName;
+  late double _price;
+
+  Expense get currentModel => Expense(
+        id: _id,
+        name: _name,
+        categoryId: _categoryId,
+        categoryName: _categoryName,
+        price: _price,
+      );
 
   _ExpenseDetailPageState(this.item) {
     _id = item.id;
+    _name = item.name;
     _categoryId = item.categoryId;
     _categoryName = item.categoryName;
+    _price = item.price;
   }
 
   @override
-  List<Widget> buildFields() {
+  Widget build(BuildContext context) {
+    return SimpleDetailPage(
+      formKey: formKey,
+      item: item,
+      fields: _buildFields(),
+      actionRow: _buildActionRow(),
+      getCurrentModel: () => currentModel,
+    );
+  }
+
+  List<Widget> _buildFields() {
+    final name = GenericTextField(
+      labelText: "Name",
+      initialValue: _name,
+      required: true,
+      onSaved: (value) {
+        _name = value;
+      },
+    );
+
+    final category = ModelSelectionField<ExpenseCategory>(
+      labelText: "Category",
+      initialId: _categoryId,
+      initialValue: _categoryName,
+      routeName: "/expense_category",
+      //iconMapper: ExpenseCategory.getIcon,
+      onSelected: (value) {
+        setState(() {
+          _categoryId = value.id;
+          _categoryName = value.name;
+        });
+      },
+    );
+
+    final price = GenericTextField(
+      labelText: "Price",
+      initialValue: _price.toString(),
+      required: true,
+      keyboardType: TextInputType.numberWithOptions(decimal: true),
+      onSaved: (value) {
+        _name = value;
+      },
+    );
+
     return [
-      ModelSelectionField<ExpenseCategoryPage>(
-        labelText: "Category",
-        initialId: _categoryId,
-        initialValue: _categoryName,
-        routeName: "/expense_category",
-        iconMapper: ExpenseCategory.getIcon,
-        onSelected: (value) {},
-      ),
-      GenericTextField(
-        labelText: "Info",
-        initialValue: "",
-        onSaved: (value) {},
-      ),
+      name,
+      category,
+      price,
     ];
+  }
+
+  Widget _buildActionRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        TextButton.icon(
+          icon: Icon(Icons.save),
+          label: Text("Save"),
+          onPressed: () => formKey.currentState!.submit(),
+        ),
+      ],
+    );
   }
 }

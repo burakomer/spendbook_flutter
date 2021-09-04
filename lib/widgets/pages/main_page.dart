@@ -1,15 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:kuma_app/data/models/expense.dart';
-import 'package:kuma_app/widgets/pages/tab_page_scaffold.dart';
-import 'package:kuma_app/widgets/pages/tab_scaffold.dart';
 
-import 'app_scaffold.dart';
 import 'expense_tab.dart';
 import 'settings_tab.dart';
 import 'summary_tab.dart';
+import 'tab_page_scaffold.dart';
+import 'tab_scaffold.dart';
 
 enum MainPageTabs {
   Summary,
@@ -30,9 +27,9 @@ class _MainPageState extends State<MainPage> {
     return TabPageScaffold(
       tabBuilder: _buildTabs,
       tabButtons: [
-        BottomNavigationBarItem(icon: FaIcon(FontAwesomeIcons.chartPie), label: describeEnum(MainPageTabs.Summary)),
-        BottomNavigationBarItem(icon: FaIcon(FontAwesomeIcons.moneyBill), label: describeEnum(MainPageTabs.Expenses)),
-        BottomNavigationBarItem(icon: FaIcon(FontAwesomeIcons.cog), label: describeEnum(MainPageTabs.Settings)),
+        BottomNavigationBarItem(icon: Icon(Icons.pie_chart), label: describeEnum(MainPageTabs.Summary)),
+        BottomNavigationBarItem(icon: Icon(Icons.receipt_long), label: describeEnum(MainPageTabs.Expenses)),
+        BottomNavigationBarItem(icon: Icon(Icons.settings), label: describeEnum(MainPageTabs.Settings)),
       ],
     );
   }

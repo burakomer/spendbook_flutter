@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'base_model.dart';
 
@@ -12,12 +11,12 @@ class ExpenseCategory extends BaseModel {
       : this.name = "",
         super.create();
 
-  static FaIcon getIcon(int id) {
+  static Icon getIcon(int id) {
     switch (id) {
       case 1: // Beverages
-        return FaIcon(FontAwesomeIcons.coffee, color: Colors.brown,);
+        return Icon(Icons.coffee, color: Colors.brown,);
       default:
-        return FaIcon(FontAwesomeIcons.question);
+        return Icon(Icons.not_interested);
     }
   }
 }

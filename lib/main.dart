@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'data/models/expense.dart';
+import 'dwarf/widgets/pages/route_not_found_page.dart';
 import 'widgets/pages/expense_detail_page.dart';
 import 'widgets/pages/main_page.dart';
 
@@ -14,7 +15,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final primaryColor = Colors.deepPurple;
 
-    final darkColor = Colors.black;
+    final darkColorValue = 20;
+    final darkColor = Color.fromARGB(255, darkColorValue, darkColorValue, darkColorValue);
     final lightColor = Colors.white;
 
     return GestureDetector(
@@ -42,12 +44,18 @@ class AppRoute<T> extends CupertinoPageRoute<T> {
         );
 }
 
+// extension WidgetRouteExtension on Widget {
+//   AppRoute asRoute() {
+//     return AppRoute(builder: (_) => this);
+//   }
+// }
+
 Route? generateRoute(RouteSettings settings) {
   final routeName = settings.name;
   final arguments = settings.arguments;
 
   final defaultRoute = AppRoute(
-    builder: (_) => MainPage(),
+    builder: (_) => RouteNotFoundPage(),
   );
 
   switch (routeName) {
@@ -64,30 +72,61 @@ class AppTheme {
     required Color modeColor,
     required Brightness brightness,
   }) {
+    final barColor = primaryColor;
+    final barIconColor = Colors.white;
+
     return ThemeData(
       pageTransitionsTheme: PageTransitionsTheme(builders: {
         TargetPlatform.android: CupertinoPageTransitionsBuilder(),
         TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
       }),
-      primarySwatch: primaryColor,
+      primarySwatch: barColor,
       brightness: brightness,
       scaffoldBackgroundColor: modeColor,
+      fontFamily: "Rubik",
       appBarTheme: AppBarTheme(
-        color: modeColor.withAlpha(1),
-        titleTextStyle: TextStyle(color: _getContrastingTextColorFor(modeColor), fontWeight: FontWeight.w900, fontSize: 32.0),
-        elevation: 0.0,
+        color: primaryColor,
+        titleTextStyle: TextStyle(color: _getContrastingTextColorFor(barColor), fontWeight: FontWeight.bold, fontSize: 32.0),
+        elevation: 8.0,
+        shadowColor: primaryColor,
         centerTitle: false,
-        actionsIconTheme: IconThemeData(color: primaryColor),
-        iconTheme: IconThemeData(color: primaryColor),
+        actionsIconTheme: IconThemeData(color: barIconColor),
+        iconTheme: IconThemeData(color: barIconColor),
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: modeColor.withAlpha(1),
+        backgroundColor: modeColor,
         selectedItemColor: primaryColor,
-        elevation: 0.0,
+        //elevation: 10.0,
       ),
       inputDecorationTheme: InputDecorationTheme(
-        border: OutlineInputBorder(),
+        // border: OutlineInputBorder(
+        //   borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+        // ),
+        border: InputBorder.none,
+        //contentPadding: const EdgeInsets.only(left: 8.0),
         isDense: true,
+      ),
+      cardTheme: CardTheme(
+        color: modeColor,
+        elevation: 4.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+        ),
+      ),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: primaryColor,
+        foregroundColor: _getContrastingTextColorFor(barColor),
+        splashColor: primaryColor,
+      ),
+      dividerTheme: DividerThemeData(
+          //indent: 12.0,
+          color: Colors.grey),
+      bottomAppBarTheme: BottomAppBarTheme(
+        color: modeColor,
+      ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: modeColor,
+        modalBackgroundColor: modeColor,
       ),
     );
   }

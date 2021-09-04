@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kuma_app/widgets/pages/app_scaffold.dart';
-import 'package:kuma_app/widgets/pages/tab_scaffold.dart';
+
+import 'app_scaffold.dart';
+import 'tab_scaffold.dart';
 
 class TabPageScaffold extends StatefulWidget {
   final List<TabScaffold> Function(BuildContext) tabBuilder;
@@ -35,6 +36,7 @@ class _TabPageScaffoldState extends State<TabPageScaffold> {
         onTap: (value) => setState(() => _tabIndex = value),
         items: widget.tabButtons,
       ),
+      floatingActionButton: currentTab.floatingActionButton,
     );
   }
 }
