@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "../../Libraries/dwarf_flutter"
 		}
 	],
 	"settings": {}

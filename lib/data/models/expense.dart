@@ -1,4 +1,5 @@
-import 'base_model.dart';
+
+import 'package:dwarf_flutter/data/models/base_model.dart';
 
 class Expense extends BaseModel {
   final String name;

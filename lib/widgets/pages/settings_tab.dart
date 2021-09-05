@@ -1,8 +1,7 @@
+import 'package:dwarf_flutter/widgets/pages/tab_scaffold.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:kuma_app/widgets/pages/tab_scaffold.dart';
 
-import 'app_scaffold.dart';
 import 'main_page.dart';
 
 class SettingsTab extends StatefulWidget {

@@ -1,3 +1,5 @@
+import 'package:dwarf_flutter/widgets/pages/tab_page_scaffold.dart';
+import 'package:dwarf_flutter/widgets/pages/tab_scaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -5,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'expense_tab.dart';
 import 'settings_tab.dart';
 import 'summary_tab.dart';
-import 'tab_page_scaffold.dart';
-import 'tab_scaffold.dart';
 
 enum MainPageTabs {
   Summary,

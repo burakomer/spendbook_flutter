@@ -1,6 +1,5 @@
+import 'package:dwarf_flutter/data/models/base_model.dart';
 import 'package:flutter/material.dart';
-
-import 'base_model.dart';
 
 class ExpenseCategory extends BaseModel {
   final String name;

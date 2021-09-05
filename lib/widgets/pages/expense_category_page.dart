@@ -1,6 +1,6 @@
+import 'package:dwarf_flutter/widgets/components/app_scaffold.dart';
 import 'package:flutter/material.dart';
 
-import 'app_scaffold.dart';
 
 class ExpenseCategoryPage extends StatefulWidget {
   ExpenseCategoryPage({Key? key}) : super(key: key);

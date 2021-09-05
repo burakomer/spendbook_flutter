@@ -1,11 +1,11 @@
+import 'package:dwarf_flutter/widgets/forms/generic_text_field.dart';
+import 'package:dwarf_flutter/widgets/forms/model_form.dart';
+import 'package:dwarf_flutter/widgets/forms/model_selection_field.dart';
+import 'package:dwarf_flutter/widgets/pages/simple_detail_page.dart';
 import 'package:flutter/material.dart';
-import 'package:kuma_app/widgets/crud/model_form.dart';
 
 import '../../data/models/expense.dart';
 import '../../data/models/expense_category.dart';
-import '../input/generic_text_field.dart';
-import '../input/model_selection_field.dart';
-import 'base/simple_detail_page.dart';
 
 class ExpenseDetailPage extends StatefulWidget {
   final Expense item;

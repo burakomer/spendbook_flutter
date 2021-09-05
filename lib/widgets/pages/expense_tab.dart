@@ -1,13 +1,13 @@
+import 'package:dwarf_flutter/utils/extensions.dart';
+import 'package:dwarf_flutter/utils/helpers.dart';
+import 'package:dwarf_flutter/widgets/pages/tab_scaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:kuma_app/utils/extensions.dart';
 
 import '../../data/models/expense.dart';
-import '../../dwarf/utils/utils.dart';
 import 'main_page.dart';
-import 'tab_scaffold.dart';
 
 class ExpenseTab extends StatefulWidget {
   ExpenseTab({Key? key}) : super(key: key);
