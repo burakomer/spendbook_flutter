@@ -1,12 +1,16 @@
+import 'package:dwarf_flutter/domain/cubit/model_cubit.dart';
 import 'package:dwarf_flutter/utils/extensions.dart';
 import 'package:dwarf_flutter/utils/helpers.dart';
+import 'package:dwarf_flutter/widgets/components/loading_indicator.dart';
 import 'package:dwarf_flutter/widgets/pages/tab_scaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../data/models/expense.dart';
+import '../../domain/expense/expense_cubit.dart';
+import '../../locator.dart';
 import 'main_page.dart';
 
 class ExpenseTab extends StatefulWidget {
@@ -40,39 +44,38 @@ class ExpenseTab extends StatefulWidget {
 }
 
 class _ExpenseTabState extends State<ExpenseTab> {
-  final expenses = [
-    Expense(id: 1, name: "Starbucks Latte", categoryId: 0, categoryName: "Icecek", price: 15.0),
-    Expense(id: 2, name: "Otobus", categoryId: 0, categoryName: "Ulasim", price: 4.0),
-    Expense(id: 3, name: "Gomlek", categoryId: 0, categoryName: "Giyim", price: 79.90),
-    Expense(id: 4, name: "Market Alisverisi", categoryId: 0, categoryName: "Temel Ihtiyac", price: 127.25),
-    Expense(id: 5, name: "Eczane", categoryId: 0, categoryName: "Temel Ihtiyac", price: 29.5),
-    Expense(id: 6, name: "Kargo", categoryId: 0, categoryName: "Diger", price: 16.9),
-  ];
+  final expenseCubit = getIt<ExpenseCubit>();
+
+  bool pulledDownToRefresh = false;
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: EdgeInsets.zero,
-      itemCount: expenses.length,
-      itemBuilder: (context, index) => Slidable(
-        child: buildListItem(context, index, expenses[index]),
-        actionPane: SlidableDrawerActionPane(),
-        actionExtentRatio: 0.2,
-        secondaryActions: <Widget>[
-          IconSlideAction(
-            //caption: 'Delete',
-            color: Colors.red,
-            foregroundColor: Colors.white,
-            //icon: Icons.delete,
-            iconWidget: Icon(Icons.delete, color: Colors.white),
-            onTap: () {},
-          ),
-        ],
-      ),
-      // separatorBuilder: (context, index) => Container(
-      //   height: 1.0,
-      //   color: Theme.of(context).dividerColor,
-      // ),
+    return BlocBuilder<ExpenseCubit, ModelState>(
+      bloc: expenseCubit,
+      builder: (context, state) {
+        if (state is ExpensesReady) {
+          pulledDownToRefresh = false;
+          return RefreshIndicator(
+            child: ListView.builder(
+              physics: AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.zero,
+              itemCount: state.models.length,
+              itemBuilder: (context, index) => buildListItem(context, index, state.models[index]),
+            ),
+            onRefresh: () async {
+              await expenseCubit.load(emitLoading: false);
+              pulledDownToRefresh = true;
+            },
+          );
+        } else if (state is ExpensesError) {
+          return Center(child: Text(state.message));
+        } else if (state is ExpensesLoading) {
+          return pulledDownToRefresh ? SizedBox() : LoadingIndicator(center: true);
+        } else {
+          expenseCubit.load();
+          return LoadingIndicator(center: true);
+        }
+      },
     );
   }
 
@@ -85,13 +88,16 @@ class _ExpenseTabState extends State<ExpenseTab> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text("${index + 1}. ${item.name}"),
-          Text("${item.price.toStringWithOptions(trailing: " ₺")}"),
+          Text("${item.price.toStringWithOptions(leading: "₺ ")}"), // TODO: Make leading configurable.
         ],
       ),
-      subtitle: Text("${item.categoryName}"),
+      subtitle: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [Text("${item.categoryName}"), Text("${item.createTime.longDateFormat}")],
+      ),
       onTap: () => Navigator.of(context).pushNamed(
         "/expense_detail",
-        arguments: expenses[index],
+        arguments: item,
       ),
     );
   }

@@ -3,10 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'data/models/expense.dart';
+import 'locator.dart';
 import 'widgets/pages/expense_detail_page.dart';
 import 'widgets/pages/main_page.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  setupLocator();
   runApp(MyApp());
 }
 
@@ -86,7 +89,7 @@ class AppTheme {
       fontFamily: "Rubik",
       appBarTheme: AppBarTheme(
         color: primaryColor,
-        titleTextStyle: TextStyle(color: _getContrastingTextColorFor(barColor), fontWeight: FontWeight.bold, fontSize: 32.0),
+        titleTextStyle: TextStyle(color: _getContrastingTextColorFor(barColor), fontWeight: FontWeight.bold, fontSize: 28.0),
         elevation: 8.0,
         shadowColor: primaryColor,
         centerTitle: false,
