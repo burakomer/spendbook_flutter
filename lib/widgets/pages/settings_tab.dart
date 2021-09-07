@@ -27,13 +27,13 @@ class _SettingsTabState extends State<SettingsTab> {
       children: [
         ListTile(title: Text("Definitions", style: Theme.of(context).textTheme.headline6), visualDensity: VisualDensity.compact),
         ListTile(
-          leading: Icon(Icons.category),
+          leading: Icon(Icons.category_rounded),
           title: Text("Expense Categories"),
           onTap: () => Navigator.of(context).pushNamed(ExpenseCategoryPage.routeName),
         ),
         ListTile(title: Text("General", style: Theme.of(context).textTheme.headline6), visualDensity: VisualDensity.compact),
         ListTile(
-          leading: Icon(Icons.ios_share),
+          leading: Icon(Icons.ios_share_rounded),
           title: Text("Save Database"),
           onTap: () async => await AppDatabase.shareDatabase(),
         ),

@@ -29,6 +29,7 @@ class _ExpenseCategoryDetailPageState extends State<ExpenseCategoryDetailPage> {
   final ExpenseCategory item;
   final formKey = GlobalKey<ModelFormState>();
   final cubit = getIt<ExpenseCategoryCubit>();
+  final _colorHexController = TextEditingController();
 
   bool isSaving = false;
   late int _id;
@@ -94,17 +95,20 @@ class _ExpenseCategoryDetailPageState extends State<ExpenseCategoryDetailPage> {
       labelText: "Name",
       initialValue: _name,
       required: true,
+      maxLength: 20,
       onSaved: (value) {
         _name = value;
       },
     );
 
     final colorHex = FormColorPicker(
+      controller: _colorHexController,
       labelText: "Color Hex Code",
       initialValue: _colorHex,
       onSelectColor: (color) {
         setState(() {
           _colorHex = color.value.toRadixString(16);
+          _colorHexController.text = _colorHex;
         });
       },
     );

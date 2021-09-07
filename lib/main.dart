@@ -92,14 +92,14 @@ class AppTheme {
         TargetPlatform.android: CupertinoPageTransitionsBuilder(),
         TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
       }),
-      primarySwatch: barColor,
+      primarySwatch: primaryColor,
       brightness: brightness,
       scaffoldBackgroundColor: modeColor,
       fontFamily: "Rubik",
       appBarTheme: AppBarTheme(
         color: primaryColor,
         titleTextStyle: TextStyle(color: _getContrastingTextColorFor(barColor), fontWeight: FontWeight.bold, fontSize: 24.0),
-        elevation: 8.0,
+        // elevation: 8.0,
         shadowColor: primaryColor,
         centerTitle: false,
         actionsIconTheme: IconThemeData(color: barIconColor),
@@ -141,6 +141,7 @@ class AppTheme {
         modalBackgroundColor: modeColor,
       ),
       dialogTheme: DialogTheme(
+        backgroundColor: modeColor,
         shape: RoundedRectangleBorder(
           borderRadius: const BorderRadius.all(Radius.circular(8.0)),
         ),

@@ -28,9 +28,9 @@ class _MainPageState extends State<MainPage> {
       initialTab: 1,
       tabBuilder: _buildTabs,
       tabButtons: [
-        BottomNavigationBarItem(icon: Icon(Icons.pie_chart), label: describeEnum(MainPageTabs.Summary)),
-        BottomNavigationBarItem(icon: Icon(Icons.receipt_long), label: describeEnum(MainPageTabs.Expenses)),
-        BottomNavigationBarItem(icon: Icon(Icons.settings), label: describeEnum(MainPageTabs.Settings)),
+        BottomNavigationBarItem(icon: Icon(Icons.pie_chart_rounded), label: describeEnum(MainPageTabs.Summary)),
+        BottomNavigationBarItem(icon: Icon(Icons.receipt_long_rounded), label: describeEnum(MainPageTabs.Expenses)),
+        BottomNavigationBarItem(icon: Icon(Icons.settings_rounded), label: describeEnum(MainPageTabs.Settings)),
       ],
     );
   }

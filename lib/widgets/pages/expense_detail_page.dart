@@ -1,4 +1,5 @@
 import 'package:dwarf_flutter/domain/cubit/model_cubit.dart';
+import 'package:dwarf_flutter/utils/extensions.dart';
 import 'package:dwarf_flutter/widgets/components/app_scaffold.dart';
 import 'package:dwarf_flutter/widgets/components/loading_indicator.dart';
 import 'package:dwarf_flutter/widgets/forms/generic_text_field.dart';
@@ -32,12 +33,15 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
   final formKey = GlobalKey<ModelFormState>();
   final expenseCubit = getIt<ExpenseCubit>();
 
+  final _categoryController = TextEditingController();
+
   bool isSaving = false;
   late int _id;
   late int _stx;
   late String _name;
   late int _categoryId;
   late String _categoryName;
+  late String _categoryColorHex;
   late double _price;
 
   Expense getCurrentModel({required bool deleting}) => Expense(
@@ -47,6 +51,7 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
         name: _name,
         categoryId: _categoryId,
         categoryName: _categoryName,
+        categoryColorHex: _categoryColorHex,
         price: _price,
       );
 
@@ -56,6 +61,7 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
     _name = item.name;
     _categoryId = item.categoryId;
     _categoryName = item.categoryName;
+    _categoryColorHex = item.categoryColorHex;
     _price = item.price;
   }
 
@@ -109,27 +115,38 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
     );
 
     final category = ModelSelectionField<ExpenseCategory>(
+      controller: _categoryController,
       labelText: "Category",
       initialId: _categoryId,
       initialValue: _categoryName,
       routeName: ExpenseCategoryPage.routeName,
       //iconMapper: ExpenseCategory.getIcon,
+      required: true,
       onSelected: (value) {
         setState(() {
           _categoryId = value.id;
           _categoryName = value.name;
+          _categoryController.text = _categoryName;
+        });
+      },
+      onClear: () {
+        setState(() {
+          _categoryId = 0;
+          _categoryName = "";
+          _categoryController.text = _categoryName;
         });
       },
     );
 
     final price = GenericTextField(
       labelText: "Price",
-      initialValue: _price.toString(),
+      initialValue: _price.toStringWithOptions(formatted: false, emptyIfNegative: true),
       required: true,
       keyboardType: TextInputType.numberWithOptions(decimal: true),
       onSaved: (value) {
         _price = double.parse(value);
       },
+      prefixText: "₺ ",
     );
 
     return [
