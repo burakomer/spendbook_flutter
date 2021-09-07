@@ -22,6 +22,8 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  var _summaryMonth = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     return TabPageScaffold(
@@ -37,7 +39,15 @@ class _MainPageState extends State<MainPage> {
 
   List<TabScaffold> _buildTabs(BuildContext context) {
     return [
-      SummaryTab.getTabScaffold(context),
+      SummaryTab.getTabScaffold(
+        context,
+        initialMonth: _summaryMonth,
+        onSelectMonth: (date) {
+          setState(() {
+            _summaryMonth = date;
+          });
+        },
+      ),
       ExpenseTab.getTabScaffold(context),
       SettingsTab.getTabScaffold(context),
     ];

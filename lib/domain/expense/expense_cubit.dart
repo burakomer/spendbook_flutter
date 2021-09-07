@@ -17,6 +17,7 @@ class ExpenseCubit extends ModelCubit<Expense> {
     final result = await getIt<AppDatabase>().listExpense();
 
     if (result is LISTresult<Expense>) {
+      result.modelList.sort((prev, curr) => curr.createTime.compareTo(prev.createTime));
       emit(ExpensesReady(models: result.modelList));
       return result.modelList;
     } else if (result is ERRORresult) {

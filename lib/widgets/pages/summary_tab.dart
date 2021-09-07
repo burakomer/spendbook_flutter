@@ -15,15 +15,47 @@ import '../../locator.dart';
 import 'main_page.dart';
 
 class SummaryTab extends StatefulWidget {
-  SummaryTab({Key? key}) : super(key: key);
+  final DateTime month;
+
+  SummaryTab({
+    Key? key,
+    required this.month,
+  }) : super(key: key);
 
   @override
   _SummaryTabState createState() => _SummaryTabState();
 
-  static TabScaffold getTabScaffold(BuildContext context) {
+  static TabScaffold getTabScaffold(
+    BuildContext context, {
+    required void Function(DateTime) onSelectMonth,
+    required DateTime initialMonth,
+  }) {
     return TabScaffold(
-      title: describeEnum(MainPageTabs.Summary),
-      body: SummaryTab(),
+      title: "${describeEnum(MainPageTabs.Summary)} - ${initialMonth.mediumMonthFormat}",
+      body: SummaryTab(month: initialMonth),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.date_range_rounded),
+          onPressed: () async {
+            final date = await showDatePicker(
+              context: context,
+              initialDate: initialMonth,
+              firstDate: DateTime(2021),
+              lastDate: DateTime.now(),
+            );
+            if (date != null) onSelectMonth(date);
+          },
+        ),
+      ],
+      floatingActionButton: !initialMonth.isSameDate(DateTime.now(), day: false)
+          ? FloatingActionButton(
+              // label: Text("This Month"),
+              child: Icon(Icons.today_rounded),
+              onPressed: () async {
+                onSelectMonth(DateTime.now());
+              },
+            )
+          : null,
     );
   }
 }
@@ -45,7 +77,7 @@ class _SummaryTabState extends State<SummaryTab> {
         } else if (state is ExpensesLoading) {
           return pulledDownToRefresh ? SizedBox() : LoadingIndicator(center: true);
         } else {
-          expenseCubit.load();
+          expenseCubit.load(); // TODO: Filter the month only.
           return LoadingIndicator(center: true);
         }
       },
@@ -53,6 +85,15 @@ class _SummaryTabState extends State<SummaryTab> {
   }
 
   Widget _buildList(BuildContext context, ExpensesReady state) {
+    final models = state.models.where((element) => element.createTime.mediumMonthFormat == widget.month.mediumMonthFormat).toList();
+    if (models.isEmpty)
+      return Center(
+        child: Text(
+          "No Data",
+          style: Theme.of(context).textTheme.headline6,
+        ),
+      );
+
     return RefreshIndicator(
       child: ListView(
         physics: AlwaysScrollableScrollPhysics(),
@@ -61,7 +102,7 @@ class _SummaryTabState extends State<SummaryTab> {
             padding: const EdgeInsets.all(12.0),
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: state.models
+              children: models
                   .groupListsBy(
                     (element) => element.categoryId,
                   )
@@ -83,7 +124,7 @@ class _SummaryTabState extends State<SummaryTab> {
               ).toList(),
             ),
           ),
-          _buildPieChart(context, state.models),
+          _buildPieChart(context, models),
         ],
       ),
       onRefresh: () async {
@@ -98,47 +139,58 @@ class _SummaryTabState extends State<SummaryTab> {
 
     final fontSize = 16.0;
     final radius = 80.0;
-    final widgetSize = 40.0;
+
+    final totalMonthExpense = expenses.map((e) => e.price).reduce((value, element) => value + element);
 
     return Container(
       height: 400.0,
-      child: PieChart(
-        PieChartData(
-          // startDegreeOffset: 180,
-          borderData: FlBorderData(show: false),
-          sectionsSpace: 8.0,
-          centerSpaceRadius: 80.0, //double.infinity,
-          sections: expenses
-              .groupListsBy(
-                (element) => element.categoryId,
-              )
-              .values
-              .map(
-            (byCategory) {
-              final totalExpense = byCategory.map((e) => e.price).reduce((value, element) => value + element);
-              final categoryColor = byCategory[0].categoryColor;
-              final categoryName = byCategory[0].categoryName;
-              return PieChartSectionData(
-                badgeWidget: GenericBadge(
-                  text: totalExpense.toStringWithOptions(leading: "₺ "),
-                  textStyle: TextStyle(fontSize: fontSize, fontWeight: FontWeight.w500),
-                ),
-                // badgeWidget: GenericBadge(text: categoryName),
-                // badgePositionPercentageOffset: -0.3,
-                badgePositionPercentageOffset: 1,
-                title: "",
-                borderSide: BorderSide(width: 10.0, color: categoryColor ?? Colors.transparent),
-                value: totalExpense,
-                // title: totalExpense.toStringWithOptions(leading: "₺ "),
-                color: categoryColor,
-                radius: radius,
-                titleStyle: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
-              );
-            },
-          ).toList(),
-        ),
-        swapAnimationDuration: Duration(milliseconds: 150), // Optional
-        swapAnimationCurve: Curves.bounceOut, // Optional
+      child: Stack(
+        children: [
+          Center(
+            child: Text(
+              totalMonthExpense.toStringWithOptions(leading: "₺ "),
+              style: TextStyle(fontSize: fontSize + 8.0, fontWeight: FontWeight.bold),
+            ),
+          ),
+          PieChart(
+            PieChartData(
+              // startDegreeOffset: 180,
+              borderData: FlBorderData(show: false),
+              sectionsSpace: 8.0,
+              centerSpaceRadius: 80.0, //double.infinity,
+              sections: expenses
+                  .groupListsBy(
+                    (element) => element.categoryId,
+                  )
+                  .values
+                  .map(
+                (byCategory) {
+                  final totalCategoryExpense = byCategory.map((e) => e.price).reduce((value, element) => value + element);
+                  final categoryColor = byCategory[0].categoryColor;
+                  final categoryName = byCategory[0].categoryName;
+                  return PieChartSectionData(
+                    badgeWidget: GenericBadge(
+                      text: totalCategoryExpense.toStringWithOptions(leading: "₺ "),
+                      textStyle: TextStyle(fontSize: fontSize, fontWeight: FontWeight.w500),
+                    ),
+                    // badgeWidget: GenericBadge(text: categoryName),
+                    // badgePositionPercentageOffset: -0.3,
+                    badgePositionPercentageOffset: 1,
+                    title: "",
+                    borderSide: BorderSide(width: 10.0, color: categoryColor ?? Colors.transparent),
+                    value: totalCategoryExpense,
+                    // title: totalExpense.toStringWithOptions(leading: "₺ "),
+                    color: categoryColor,
+                    radius: radius,
+                    titleStyle: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
+                  );
+                },
+              ).toList(),
+            ),
+            swapAnimationDuration: Duration(milliseconds: 150), // Optional
+            swapAnimationCurve: Curves.bounceOut, // Optional
+          ),
+        ],
       ),
     );
   }

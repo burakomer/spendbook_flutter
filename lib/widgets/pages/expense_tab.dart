@@ -74,11 +74,13 @@ class _ExpenseTabState extends State<ExpenseTab> {
     final groupByDay = true;
 
     pulledDownToRefresh = false;
+
     return RefreshIndicator(
       child: GroupedListView<Expense, DateTime>(
         physics: AlwaysScrollableScrollPhysics(),
         elements: state.models,
         groupBy: (element) => element.createTime.getDatePart(day: groupByDay),
+        sort: false,
         groupSeparatorBuilder: (date) => Material(
           color: Theme.of(context).scaffoldBackgroundColor,
           elevation: 1.5,
