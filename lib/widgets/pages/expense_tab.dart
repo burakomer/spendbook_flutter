@@ -1,6 +1,5 @@
 import 'package:dwarf_flutter/domain/cubit/model_cubit.dart';
 import 'package:dwarf_flutter/utils/extensions.dart';
-import 'package:dwarf_flutter/utils/helpers.dart';
 import 'package:dwarf_flutter/widgets/components/loading_indicator.dart';
 import 'package:dwarf_flutter/widgets/pages/tab_scaffold.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/models/expense.dart';
 import '../../domain/expense/expense_cubit.dart';
 import '../../locator.dart';
+import 'expense_detail_page.dart';
 import 'main_page.dart';
 
 class ExpenseTab extends StatefulWidget {
@@ -24,18 +24,18 @@ class ExpenseTab extends StatefulWidget {
       title: describeEnum(MainPageTabs.Expenses),
       body: ExpenseTab(),
       actions: [
-        IconButton(
-          icon: Icon(Icons.filter_alt),
-          onPressed: () => showTallBottomSheet(
-            context: context,
-            content: Column(),
-          ),
-        ),
+        // IconButton(
+        //   icon: Icon(Icons.filter_alt),
+        //   onPressed: () => showTallBottomSheet(
+        //     context: context,
+        //     content: Column(),
+        //   ),
+        // ),
       ],
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add_rounded),
         onPressed: () => Navigator.of(context).pushNamed(
-          "/expense_detail",
+          ExpenseDetailPage.routeName,
           arguments: Expense.create(),
         ),
       ),
@@ -96,7 +96,7 @@ class _ExpenseTabState extends State<ExpenseTab> {
         children: [Text("${item.categoryName}"), Text("${item.createTime.longDateFormat}")],
       ),
       onTap: () => Navigator.of(context).pushNamed(
-        "/expense_detail",
+        ExpenseDetailPage.routeName,
         arguments: item,
       ),
     );

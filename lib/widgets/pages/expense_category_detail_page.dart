@@ -1,68 +1,59 @@
 import 'package:dwarf_flutter/domain/cubit/model_cubit.dart';
 import 'package:dwarf_flutter/widgets/components/app_scaffold.dart';
 import 'package:dwarf_flutter/widgets/components/loading_indicator.dart';
+import 'package:dwarf_flutter/widgets/forms/form_color_picker.dart';
 import 'package:dwarf_flutter/widgets/forms/generic_text_field.dart';
 import 'package:dwarf_flutter/widgets/forms/model_form.dart';
-import 'package:dwarf_flutter/widgets/forms/model_selection_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../data/models/expense.dart';
 import '../../data/models/expense_category.dart';
-import '../../domain/expense/expense_cubit.dart';
+import '../../domain/expense_category/expense_category_cubit.dart';
 import '../../locator.dart';
-import 'expense_category_page.dart';
 
-class ExpenseDetailPage extends StatefulWidget {
-  static const routeName = "/expense_detail";
+class ExpenseCategoryDetailPage extends StatefulWidget {
+  static const routeName = "/expense_category_detail";
 
-  final Expense item;
+  final ExpenseCategory item;
 
-  ExpenseDetailPage({
+  ExpenseCategoryDetailPage({
     Key? key,
     required this.item,
   }) : super(key: key);
 
   @override
-  _ExpenseDetailPageState createState() => _ExpenseDetailPageState(item);
+  _ExpenseCategoryDetailPageState createState() => _ExpenseCategoryDetailPageState(item);
 }
 
-class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
-  final Expense item;
+class _ExpenseCategoryDetailPageState extends State<ExpenseCategoryDetailPage> {
+  final ExpenseCategory item;
   final formKey = GlobalKey<ModelFormState>();
-  final expenseCubit = getIt<ExpenseCubit>();
+  final cubit = getIt<ExpenseCategoryCubit>();
 
   bool isSaving = false;
   late int _id;
   late int _stx;
   late String _name;
-  late int _categoryId;
-  late String _categoryName;
-  late double _price;
+  late String _colorHex;
 
-  Expense getCurrentModel({required bool deleting}) => Expense(
+  ExpenseCategory getCurrentModel({required bool deleting}) => ExpenseCategory(
         id: _id,
         stx: deleting ? _stx * -1 : _stx,
-        createTime: item.createTime,
         name: _name,
-        categoryId: _categoryId,
-        categoryName: _categoryName,
-        price: _price,
+        colorHex: _colorHex,
       );
 
-  _ExpenseDetailPageState(this.item) {
+  _ExpenseCategoryDetailPageState(this.item) {
     _id = item.id;
     _stx = item.stx;
     _name = item.name;
-    _categoryId = item.categoryId;
-    _categoryName = item.categoryName;
-    _price = item.price;
+    _colorHex = item.colorHex;
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ExpenseCubit, ModelState>(
-      bloc: expenseCubit,
+    return BlocListener<ExpenseCategoryCubit, ModelState>(
+      bloc: cubit,
       listener: (context, state) {
         if (state is ModelsReady && isSaving) {
           Navigator.of(context).pop();
@@ -71,7 +62,7 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
         }
       },
       child: AppScaffold(
-        title: _id > 0 ? "Expense" : "New Expense",
+        title: _id > 0 ? "Expense Category" : "New Expense Category",
         bottomActions: [
           _buildActionRow(),
         ],
@@ -83,7 +74,7 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
                   child: Column(
                     children: [
                       ModelForm(
-                        bloc: expenseCubit,
+                        bloc: cubit,
                         key: formKey,
                         fields: _buildFields(),
                         item: item,
@@ -108,34 +99,19 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
       },
     );
 
-    final category = ModelSelectionField<ExpenseCategory>(
-      labelText: "Category",
-      initialId: _categoryId,
-      initialValue: _categoryName,
-      routeName: ExpenseCategoryPage.routeName,
-      //iconMapper: ExpenseCategory.getIcon,
-      onSelected: (value) {
+    final colorHex = FormColorPicker(
+      labelText: "Color Hex Code",
+      initialValue: _colorHex,
+      onSelectColor: (color) {
         setState(() {
-          _categoryId = value.id;
-          _categoryName = value.name;
+          _colorHex = color.value.toRadixString(16);
         });
-      },
-    );
-
-    final price = GenericTextField(
-      labelText: "Price",
-      initialValue: _price.toString(),
-      required: true,
-      keyboardType: TextInputType.numberWithOptions(decimal: true),
-      onSaved: (value) {
-        _price = double.parse(value);
       },
     );
 
     return [
       name,
-      category,
-      price,
+      colorHex,
     ];
   }
 

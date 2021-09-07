@@ -3,7 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'data/models/expense.dart';
+import 'data/models/expense_category.dart';
 import 'locator.dart';
+import 'widgets/pages/expense_category_detail_page.dart';
+import 'widgets/pages/expense_category_page.dart';
 import 'widgets/pages/expense_detail_page.dart';
 import 'widgets/pages/main_page.dart';
 
@@ -57,6 +60,8 @@ Route? generateRoute(RouteSettings settings) {
   final routeName = settings.name;
   final arguments = settings.arguments;
 
+  final pickerMode = settings.arguments is bool ? settings.arguments as bool : false;
+
   final defaultRoute = AppRoute(
     builder: (_) => RouteNotFoundPage(),
   );
@@ -64,6 +69,10 @@ Route? generateRoute(RouteSettings settings) {
   switch (routeName) {
     case "/expense_detail":
       return (arguments is Expense) ? AppRoute(builder: (_) => ExpenseDetailPage(item: arguments)) : defaultRoute;
+    case "/expense_category":
+      return AppRoute(builder: (_) => ExpenseCategoryPage(pickerMode: pickerMode));
+    case "/expense_category_detail":
+      return (arguments is ExpenseCategory) ? AppRoute(builder: (_) => ExpenseCategoryDetailPage(item: arguments)) : defaultRoute;
     default:
       return defaultRoute;
   }
@@ -89,7 +98,7 @@ class AppTheme {
       fontFamily: "Rubik",
       appBarTheme: AppBarTheme(
         color: primaryColor,
-        titleTextStyle: TextStyle(color: _getContrastingTextColorFor(barColor), fontWeight: FontWeight.bold, fontSize: 28.0),
+        titleTextStyle: TextStyle(color: _getContrastingTextColorFor(barColor), fontWeight: FontWeight.bold, fontSize: 24.0),
         elevation: 8.0,
         shadowColor: primaryColor,
         centerTitle: false,
@@ -130,6 +139,11 @@ class AppTheme {
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: modeColor,
         modalBackgroundColor: modeColor,
+      ),
+      dialogTheme: DialogTheme(
+        shape: RoundedRectangleBorder(
+          borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+        ),
       ),
     );
   }

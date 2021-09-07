@@ -4,11 +4,15 @@ import 'package:flutter/material.dart';
 
 class ExpenseCategory extends BaseModel {
   final String name;
+  final String colorHex;
+
+  Color? get color => colorHex.colorFromHexCode();
 
   ExpenseCategory({
     required int id,
     required int stx,
     required this.name,
+    required this.colorHex,
   }) : super(
           id: id,
           stx: stx,
@@ -16,10 +20,12 @@ class ExpenseCategory extends BaseModel {
 
   ExpenseCategory.create()
       : this.name = "",
+        this.colorHex = "",
         super.create();
 
   ExpenseCategory.fromMap(Map<String, dynamic> map)
       : name = map.getString("name"),
+        colorHex = map.getString("color_hex"),
         super.fromMap(map);
 
   static Icon getIcon(int id) {

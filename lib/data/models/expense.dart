@@ -32,8 +32,8 @@ class Expense extends BaseModel {
   Expense.fromMap(Map<String, dynamic> map)
       : createTime = map.getDateTime("create_time"),
         name = map.getString("name"),
-        categoryId = map.getInt("categoryId"),
-        categoryName = map.getString("categoryName"),
+        categoryId = map.getInt("category_id"),
+        categoryName = map.getString("category_name"),
         price = map.getDouble("price"),
         super.fromMap(map);
 

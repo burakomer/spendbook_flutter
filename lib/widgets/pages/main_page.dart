@@ -25,6 +25,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return TabPageScaffold(
+      initialTab: 1,
       tabBuilder: _buildTabs,
       tabButtons: [
         BottomNavigationBarItem(icon: Icon(Icons.pie_chart), label: describeEnum(MainPageTabs.Summary)),
