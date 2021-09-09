@@ -13,10 +13,10 @@ import 'widgets/pages/main_page.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
-  runApp(MyApp());
+  runApp(KumaApp());
 }
 
-class MyApp extends StatelessWidget {
+class KumaApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Colors.deepPurple;
@@ -79,6 +79,9 @@ Route? generateRoute(RouteSettings settings) {
 }
 
 class AppTheme {
+  static final borderRadius = BorderRadius.circular(8.0);
+  static final shapeBorder = RoundedRectangleBorder(borderRadius: borderRadius);
+
   static getAppTheme({
     required MaterialColor primaryColor,
     required Color modeColor,
@@ -98,8 +101,12 @@ class AppTheme {
       fontFamily: "Rubik",
       appBarTheme: AppBarTheme(
         color: primaryColor,
-        titleTextStyle: TextStyle(color: _getContrastingTextColorFor(barColor), fontWeight: FontWeight.bold, fontSize: 24.0),
-        // elevation: 8.0,
+        titleTextStyle: TextStyle(
+          color: _getContrastingTextColorFor(barColor),
+          fontWeight: FontWeight.bold,
+          fontSize: 24.0,
+        ),
+        elevation: 4.0,
         shadowColor: primaryColor,
         centerTitle: false,
         actionsIconTheme: IconThemeData(color: barIconColor),
@@ -121,9 +128,11 @@ class AppTheme {
       cardTheme: CardTheme(
         color: modeColor,
         elevation: 4.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-        ),
+        shape: shapeBorder,
+        margin: EdgeInsets.zero,
+      ),
+      checkboxTheme: CheckboxThemeData(
+        shape: shapeBorder.copyWith(borderRadius: BorderRadius.circular(4.0)),
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: primaryColor,
@@ -142,8 +151,21 @@ class AppTheme {
       ),
       dialogTheme: DialogTheme(
         backgroundColor: modeColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+        shape: shapeBorder,
+      ),
+      timePickerTheme: TimePickerThemeData(
+        backgroundColor: modeColor,
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(primaryColor),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(shapeBorder),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+          foregroundColor: MaterialStateProperty.all<Color>(primaryColor),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(shapeBorder),
         ),
       ),
     );

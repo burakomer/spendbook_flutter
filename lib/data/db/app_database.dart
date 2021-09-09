@@ -134,6 +134,7 @@ class AppDatabase {
 
       final arguments = [
         model.stx,
+        model.createTime.toString(),
         model.name,
         model.categoryId,
         model.price,
@@ -141,8 +142,8 @@ class AppDatabase {
 
       if (model.id < 0) {
         final sql = """
-          INSERT INTO t_expense (stx, name, category_id, price)
-          VALUES  (?, ?, ?, ?)
+          INSERT INTO t_expense (stx, create_time, name, category_id, price)
+          VALUES  (?, ?, ?, ?, ?)
         """;
         final lastInsertId = await db.rawInsert(sql, arguments);
         //final insertedModel = await listExpense(filter: ExpenseFilter(id: lastInsertId));
@@ -150,7 +151,7 @@ class AppDatabase {
       } else {
         final sql = """
           UPDATE t_expense
-          SET stx = ?, name = ?, category_id = ?, price = ?
+          SET stx = ?, create_time = ?, name = ?, category_id = ?, price = ?
           WHERE id = ?
         """;
         arguments.addAll([model.id]);

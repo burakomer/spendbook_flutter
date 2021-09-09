@@ -2,6 +2,11 @@ import 'package:dwarf_flutter/data/models/base_model.dart';
 import 'package:dwarf_flutter/utils/extensions.dart';
 import 'package:flutter/material.dart';
 
+enum ExpenseTypes {
+  OneTime,
+  Installment,
+}
+
 class Expense extends BaseModel {
   final DateTime createTime;
   final String name;

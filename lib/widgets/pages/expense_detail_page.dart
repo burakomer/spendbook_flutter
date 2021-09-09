@@ -1,12 +1,18 @@
+import 'dart:math' as math;
+
 import 'package:dwarf_flutter/domain/cubit/model_cubit.dart';
 import 'package:dwarf_flutter/utils/extensions.dart';
 import 'package:dwarf_flutter/widgets/components/app_scaffold.dart';
 import 'package:dwarf_flutter/widgets/components/loading_indicator.dart';
+import 'package:dwarf_flutter/widgets/forms/autocomplete_text_field.dart';
+import 'package:dwarf_flutter/widgets/forms/date_time_field.dart';
 import 'package:dwarf_flutter/widgets/forms/generic_text_field.dart';
 import 'package:dwarf_flutter/widgets/forms/model_form.dart';
 import 'package:dwarf_flutter/widgets/forms/model_selection_field.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kuma_app/main.dart';
 
 import '../../data/models/expense.dart';
 import '../../data/models/expense_category.dart';
@@ -32,12 +38,15 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
   final Expense item;
   final formKey = GlobalKey<ModelFormState>();
   final expenseCubit = getIt<ExpenseCubit>();
+  final autocompleteCubit = ExpenseCubit();
 
   final _categoryController = TextEditingController();
+  final _createTimeController = TextEditingController();
 
   bool isSaving = false;
   late int _id;
   late int _stx;
+  late DateTime _createTime;
   late String _name;
   late int _categoryId;
   late String _categoryName;
@@ -47,7 +56,7 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
   Expense getCurrentModel({required bool deleting}) => Expense(
         id: _id,
         stx: deleting ? _stx * -1 : _stx,
-        createTime: item.createTime,
+        createTime: _createTime,
         name: _name,
         categoryId: _categoryId,
         categoryName: _categoryName,
@@ -58,11 +67,18 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
   _ExpenseDetailPageState(this.item) {
     _id = item.id;
     _stx = item.stx;
+    _createTime = item.createTime;
     _name = item.name;
     _categoryId = item.categoryId;
     _categoryName = item.categoryName;
     _categoryColorHex = item.categoryColorHex;
     _price = item.price;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((_) => autocompleteCubit.load());
   }
 
   @override
@@ -84,8 +100,8 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
         body: isSaving
             ? LoadingIndicator(center: true)
             : SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
+                child: Container(
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
                       ModelForm(
@@ -105,14 +121,52 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
   }
 
   List<Widget> _buildFields() {
-    final name = GenericTextField(
+    final name = AutocompleteTextField<Expense>(
+      borderRadius: AppTheme.borderRadius,
       labelText: "Name",
       initialValue: _name,
       required: true,
       onSaved: (value) {
         _name = value;
       },
+      textSelector: (option) => option.name,
+      onSelected: (model) {
+        setState(() {
+          _name = model.name;
+          _categoryId = model.categoryId;
+          _categoryName = model.categoryName;
+          _categoryColorHex = model.categoryColorHex;
+          _price = model.price;
+        });
+      },
+      optionsBuilder: (editingValue) {
+        if (editingValue.text.isNotEmpty && autocompleteCubit.state is ExpensesReady) {
+          return (autocompleteCubit.state as ExpensesReady).models.where(
+                (model) => model.name.contains(editingValue.text.toLowerCase()),
+              );
+        }
+        return [];
+      },
+      itemBuilder: (option) => ListTile(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(option.name),
+            Text(option.price.toStringWithOptions(leading: "₺ ")),
+          ],
+        ),
+      ),
     );
+
+    // final name = GenericTextField(
+    //   labelText: "Name",
+    //   initialValue: _name,
+    //   required: true,
+    //   onSaved: (value) {
+    //     _name = value;
+    //   },
+    // );
 
     final category = ModelSelectionField<ExpenseCategory>(
       controller: _categoryController,
@@ -139,6 +193,7 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
     );
 
     final price = GenericTextField(
+      key: Key(_price.toString()),
       labelText: "Price",
       initialValue: _price.toStringWithOptions(formatted: false, emptyIfNegative: true),
       required: true,
@@ -149,12 +204,49 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
       prefixText: "₺ ",
     );
 
+    final date = DateTimeField(
+      controller: _createTimeController,
+      labelText: "Date",
+      initialDate: _createTime,
+      firstDate: DateTime(2021),
+      lastDate: DateTime.now(),
+      timePicker: true,
+      onSelectDateTime: (dateTime) {
+        setState(() {
+          _createTime = dateTime;
+        });
+      },
+    );
+
+    final expenseType = DropdownButton<ExpenseTypes>(
+      isExpanded: true,
+      borderRadius: BorderRadius.circular(8.0),
+      underline: SizedBox(),
+      value: val,
+      icon: Transform.rotate(angle: math.pi * 0.5, child: Icon(Icons.chevron_right)),
+      items: ExpenseTypes.values
+          .map(
+            (e) => DropdownMenuItem(
+              value: e,
+              child: Text(
+                describeEnum(e),
+              ),
+            ),
+          )
+          .toList(),
+      onChanged: (ExpenseTypes? value) => setState(() => val = value!),
+    );
+
     return [
       name,
       category,
       price,
+      date,
+      expenseType,
     ];
   }
+
+  var val = ExpenseTypes.OneTime;
 
   Widget _buildActionRow() {
     return Expanded(
@@ -169,7 +261,7 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
                   onPressed: () => formKey.currentState!.submit(deleting: true),
                 )
               : SizedBox(),
-          TextButton.icon(
+          ElevatedButton.icon(
             icon: Icon(Icons.save),
             label: Text("Save"),
             onPressed: () async => await formKey.currentState!.submit(),
