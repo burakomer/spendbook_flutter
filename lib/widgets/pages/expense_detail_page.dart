@@ -140,12 +140,13 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
         });
       },
       optionsBuilder: (editingValue) {
-        if (editingValue.text.isNotEmpty && autocompleteCubit.state is ExpensesReady) {
-          return (autocompleteCubit.state as ExpensesReady).models.where(
-                (model) => model.name.contains(editingValue.text.toLowerCase()),
-              );
-        }
-        return [];
+        if (!(autocompleteCubit.state is ExpensesReady)) return [];
+        final models = (autocompleteCubit.state as ExpensesReady).models.toList();
+        return editingValue.text.isNotEmpty
+            ? models.where(
+                (model) => model.name.toLowerCase().contains(editingValue.text.toLowerCase()),
+              )
+            : models.take(5);
       },
       itemBuilder: (option) => ListTile(
         title: Row(
