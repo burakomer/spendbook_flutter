@@ -1,18 +1,19 @@
 import 'dart:math' as math;
 
 import 'package:dwarf_flutter/domain/cubit/model_cubit.dart';
+import 'package:dwarf_flutter/theme/app_theme.dart';
 import 'package:dwarf_flutter/utils/extensions.dart';
 import 'package:dwarf_flutter/widgets/components/app_scaffold.dart';
 import 'package:dwarf_flutter/widgets/components/loading_indicator.dart';
 import 'package:dwarf_flutter/widgets/forms/autocomplete_text_field.dart';
 import 'package:dwarf_flutter/widgets/forms/date_time_field.dart';
+import 'package:dwarf_flutter/widgets/forms/form_action_row.dart';
 import 'package:dwarf_flutter/widgets/forms/generic_text_field.dart';
 import 'package:dwarf_flutter/widgets/forms/model_form.dart';
 import 'package:dwarf_flutter/widgets/forms/model_selection_field.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kuma_app/main.dart';
 
 import '../../data/models/expense.dart';
 import '../../data/models/expense_category.dart';
@@ -122,7 +123,7 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
 
   List<Widget> _buildFields() {
     final name = AutocompleteTextField<Expense>(
-      borderRadius: AppTheme.borderRadius,
+      borderRadius: AppTheme.of(context).borderRadius,
       labelText: "Name",
       initialValue: _name,
       required: true,
@@ -251,23 +252,12 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
 
   Widget _buildActionRow() {
     return Expanded(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _id > 0
-              ? TextButton.icon(
-                  style: TextButton.styleFrom(primary: Colors.red),
-                  icon: Icon(Icons.delete),
-                  label: Text("Delete"),
-                  onPressed: () => formKey.currentState!.submit(deleting: true),
-                )
-              : SizedBox(),
-          ElevatedButton.icon(
-            icon: Icon(Icons.save),
-            label: Text("Save"),
-            onPressed: () async => await formKey.currentState!.submit(),
-          ),
-        ],
+      child: FormActionRow(
+        showDelete: _id > 0,
+        onSave: () async => await formKey.currentState!.submit(),
+        onDelete: () => formKey.currentState!.submit(deleting: true),
+        saveIcon: AppTheme.of(context).icons.save,
+        deleteIcon: AppTheme.of(context).icons.delete,
       ),
     );
   }

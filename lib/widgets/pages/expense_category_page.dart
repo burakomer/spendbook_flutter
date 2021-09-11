@@ -1,13 +1,11 @@
 import 'package:dwarf_flutter/domain/cubit/model_cubit.dart';
 import 'package:dwarf_flutter/utils/extensions.dart';
 import 'package:dwarf_flutter/widgets/components/app_scaffold.dart';
-import 'package:dwarf_flutter/widgets/components/generic_badge.dart';
 import 'package:dwarf_flutter/widgets/components/loading_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:path/path.dart';
 
 import '../../data/models/expense_category.dart';
 import '../../domain/expense_category/expense_category_cubit.dart';
@@ -57,7 +55,7 @@ class _ExpenseCategoryPageState extends State<ExpenseCategoryPage> {
           return RefreshIndicator(
             child: ListView.builder(
               physics: AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.zero,
+              padding: EdgeInsets.symmetric(horizontal: 12.0),
               itemCount: state.models.length,
               itemBuilder: (context, index) => buildListItem(context, index, state.models[index]),
             ),
@@ -79,33 +77,36 @@ class _ExpenseCategoryPageState extends State<ExpenseCategoryPage> {
   }
 
   Widget buildListItem(BuildContext context, int index, ExpenseCategory item) {
-    return ListTile(
-      tileColor: item.color,
-      // visualDensity: VisualDensity.compact,
-      horizontalTitleGap: 8.0,
-      trailing: Icon(Icons.chevron_right_rounded),
-      title: Row(
-        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text("${index + 1}. ${item.name}", style: TextStyle(color: item.color.contrastingTextColor())),
-          // Text("${index + 1}. "),
-          // GenericBadge(
-          //   text: "${item.name}",
-          //   textStyle: TextStyle(color: item.color.contrastingTextColor()),
-          //   color: item.color,
-          // ),
-        ],
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 4.0),
+      color: item.color,
+      child: ListTile(
+        // visualDensity: VisualDensity.compact,
+        horizontalTitleGap: 8.0,
+        trailing: Icon(Icons.chevron_right_rounded),
+        title: Row(
+          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("${index + 1}. ${item.name}", style: TextStyle(color: item.color.contrastingTextColor())),
+            // Text("${index + 1}. "),
+            // GenericBadge(
+            //   text: "${item.name}",
+            //   textStyle: TextStyle(color: item.color.contrastingTextColor()),
+            //   color: item.color,
+            // ),
+          ],
+        ),
+        // subtitle: Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //   children: [],
+        // ),
+        onTap: () => widget.pickerMode
+            ? Navigator.of(context).pop(item)
+            : Navigator.of(context).pushNamed(
+                ExpenseCategoryDetailPage.routeName,
+                arguments: item,
+              ),
       ),
-      // subtitle: Row(
-      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //   children: [],
-      // ),
-      onTap: () => widget.pickerMode
-          ? Navigator.of(context).pop(item)
-          : Navigator.of(context).pushNamed(
-              ExpenseCategoryDetailPage.routeName,
-              arguments: item,
-            ),
     );
   }
 }

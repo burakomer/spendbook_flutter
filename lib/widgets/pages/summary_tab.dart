@@ -1,10 +1,12 @@
 import 'package:collection/collection.dart';
 import 'package:dwarf_flutter/domain/cubit/model_cubit.dart';
+import 'package:dwarf_flutter/theme/app_theme.dart';
 import 'package:dwarf_flutter/utils/extensions.dart';
 import 'package:dwarf_flutter/widgets/components/generic_badge.dart';
 import 'package:dwarf_flutter/widgets/components/loading_indicator.dart';
 import 'package:dwarf_flutter/widgets/pages/tab_scaffold.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,7 +37,7 @@ class SummaryTab extends StatefulWidget {
       body: SummaryTab(month: initialMonth),
       actions: [
         IconButton(
-          icon: Icon(Icons.date_range_rounded),
+          icon: Icon(AppTheme.of(context).icons.calendar),
           onPressed: () async {
             final date = await showDatePicker(
               context: context,
@@ -50,7 +52,7 @@ class SummaryTab extends StatefulWidget {
       floatingActionButton: !initialMonth.isSameDate(DateTime.now(), day: false)
           ? FloatingActionButton(
               // label: Text("This Month"),
-              child: Icon(Icons.today_rounded),
+              child: Icon(AppTheme.of(context).icons.calendarToday),
               onPressed: () async {
                 onSelectMonth(DateTime.now());
               },
@@ -115,7 +117,6 @@ class _SummaryTabState extends State<SummaryTab> {
                         padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
                         text: byCategory[0].categoryName,
                         color: byCategory[0].categoryColor,
-                        elevation: Theme.of(context).cardTheme.elevation ?? 8.0,
                       ),
                       SizedBox(width: 8.0),
                     ],

@@ -1,3 +1,4 @@
+import 'package:dwarf_flutter/theme/app_theme.dart';
 import 'package:dwarf_flutter/widgets/pages/tab_page_scaffold.dart';
 import 'package:dwarf_flutter/widgets/pages/tab_scaffold.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,9 +31,9 @@ class _MainPageState extends State<MainPage> {
       initialTab: 1,
       tabBuilder: _buildTabs,
       tabButtons: [
-        BottomNavigationBarItem(icon: Icon(Icons.pie_chart_rounded), label: describeEnum(MainPageTabs.Summary)),
-        BottomNavigationBarItem(icon: Icon(Icons.receipt_long_rounded), label: describeEnum(MainPageTabs.Expenses)),
-        BottomNavigationBarItem(icon: Icon(Icons.settings_rounded), label: describeEnum(MainPageTabs.Settings)),
+        BottomNavigationBarItem(icon: Icon(AppTheme.of(context).icons.pieChart), label: describeEnum(MainPageTabs.Summary)),
+        BottomNavigationBarItem(icon: Icon(AppTheme.of(context).icons.receiptLong), label: describeEnum(MainPageTabs.Expenses)),
+        BottomNavigationBarItem(icon: Icon(AppTheme.of(context).icons.settings), label: describeEnum(MainPageTabs.Settings)),
       ],
     );
   }

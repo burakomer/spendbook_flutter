@@ -1,3 +1,4 @@
+import 'package:dwarf_flutter/theme/app_theme.dart';
 import 'package:dwarf_flutter/widgets/pages/tab_scaffold.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -27,13 +28,13 @@ class _SettingsTabState extends State<SettingsTab> {
       children: [
         ListTile(title: Text("Definitions", style: Theme.of(context).textTheme.headline6), visualDensity: VisualDensity.compact),
         ListTile(
-          leading: Icon(Icons.category_rounded),
+          leading: Icon(AppTheme.of(context).icons.category),
           title: Text("Expense Categories"),
           onTap: () => Navigator.of(context).pushNamed(ExpenseCategoryPage.routeName),
         ),
         ListTile(title: Text("General", style: Theme.of(context).textTheme.headline6), visualDensity: VisualDensity.compact),
         ListTile(
-          leading: Icon(Icons.ios_share_rounded),
+          leading: Icon(AppTheme.of(context).icons.share),
           title: Text("Save Database"),
           onTap: () async => await AppDatabase.shareDatabase(),
         ),

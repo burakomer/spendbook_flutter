@@ -1,6 +1,9 @@
+import 'package:dwarf_flutter/theme/app_theme.dart';
+import 'package:dwarf_flutter/theme/cupertino_app_theme.dart';
 import 'package:dwarf_flutter/widgets/pages/route_not_found_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'data/models/expense.dart';
 import 'data/models/expense_category.dart';
@@ -19,23 +22,38 @@ void main() {
 class KumaApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Colors.deepPurple;
-
+    final primaryColor = Colors.indigo;
     final darkColorValue = 20;
     final darkColor = Color.fromARGB(255, darkColorValue, darkColorValue, darkColorValue);
     final lightColor = Colors.white;
 
-    return GestureDetector(
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: MaterialApp(
-        title: 'Kuma App',
-        debugShowCheckedModeBanner: false,
-        themeMode: ThemeMode.system,
-        theme: AppTheme.getAppTheme(primaryColor: primaryColor, modeColor: lightColor, brightness: Brightness.light),
-        darkTheme: AppTheme.getAppTheme(primaryColor: primaryColor, modeColor: darkColor, brightness: Brightness.dark),
-        home: MainPage(),
-        onGenerateRoute: generateRoute,
-      ),
+    final appTheme = CupertinoAppTheme(
+      primaryColor: primaryColor,
+      // icons: MaterialAppIcons(),
+    );
+
+    return Provider<AppTheme>.value(
+      value: appTheme,
+      builder: (context, child) {
+        return GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: MaterialApp(
+            title: 'Kuma App',
+            debugShowCheckedModeBanner: false,
+            themeMode: ThemeMode.system,
+            theme: appTheme.getThemeData(
+              modeColor: lightColor,
+              brightness: Brightness.light,
+            ),
+            darkTheme: appTheme.getThemeData(
+              modeColor: Colors.black, //darkColor,
+              brightness: Brightness.dark,
+            ),
+            home: MainPage(),
+            onGenerateRoute: generateRoute,
+          ),
+        );
+      },
     );
   }
 }
@@ -75,103 +93,5 @@ Route? generateRoute(RouteSettings settings) {
       return (arguments is ExpenseCategory) ? AppRoute(builder: (_) => ExpenseCategoryDetailPage(item: arguments)) : defaultRoute;
     default:
       return defaultRoute;
-  }
-}
-
-class AppTheme {
-  static final borderRadius = BorderRadius.circular(8.0);
-  static final shapeBorder = RoundedRectangleBorder(borderRadius: borderRadius);
-
-  static getAppTheme({
-    required MaterialColor primaryColor,
-    required Color modeColor,
-    required Brightness brightness,
-  }) {
-    final barColor = primaryColor;
-    final barIconColor = Colors.white;
-
-    return ThemeData(
-      pageTransitionsTheme: PageTransitionsTheme(builders: {
-        TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-      }),
-      primarySwatch: primaryColor,
-      brightness: brightness,
-      scaffoldBackgroundColor: modeColor,
-      fontFamily: "Rubik",
-      appBarTheme: AppBarTheme(
-        color: primaryColor,
-        titleTextStyle: TextStyle(
-          color: _getContrastingTextColorFor(barColor),
-          fontWeight: FontWeight.bold,
-          fontSize: 24.0,
-        ),
-        elevation: 4.0,
-        shadowColor: primaryColor,
-        centerTitle: false,
-        actionsIconTheme: IconThemeData(color: barIconColor),
-        iconTheme: IconThemeData(color: barIconColor),
-      ),
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: modeColor,
-        selectedItemColor: primaryColor,
-        //elevation: 10.0,
-      ),
-      inputDecorationTheme: InputDecorationTheme(
-        // border: OutlineInputBorder(
-        //   borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-        // ),
-        border: InputBorder.none,
-        //contentPadding: const EdgeInsets.only(left: 8.0),
-        isDense: true,
-      ),
-      cardTheme: CardTheme(
-        color: modeColor,
-        elevation: 4.0,
-        shape: shapeBorder,
-        margin: EdgeInsets.zero,
-      ),
-      checkboxTheme: CheckboxThemeData(
-        shape: shapeBorder.copyWith(borderRadius: BorderRadius.circular(4.0)),
-      ),
-      floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: primaryColor,
-        foregroundColor: _getContrastingTextColorFor(barColor),
-        splashColor: primaryColor,
-      ),
-      dividerTheme: DividerThemeData(
-          //indent: 12.0,
-          color: Colors.grey),
-      bottomAppBarTheme: BottomAppBarTheme(
-        color: modeColor,
-      ),
-      bottomSheetTheme: BottomSheetThemeData(
-        backgroundColor: modeColor,
-        modalBackgroundColor: modeColor,
-      ),
-      dialogTheme: DialogTheme(
-        backgroundColor: modeColor,
-        shape: shapeBorder,
-      ),
-      timePickerTheme: TimePickerThemeData(
-        backgroundColor: modeColor,
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(primaryColor),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(shapeBorder),
-        ),
-      ),
-      textButtonTheme: TextButtonThemeData(
-        style: ButtonStyle(
-          foregroundColor: MaterialStateProperty.all<Color>(primaryColor),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(shapeBorder),
-        ),
-      ),
-    );
-  }
-
-  static Color _getContrastingTextColorFor(Color color) {
-    return color.computeLuminance() > 0.6 ? Colors.black : Colors.white;
   }
 }

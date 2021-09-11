@@ -1,6 +1,7 @@
 import 'package:badges/badges.dart';
 import 'package:dwarf_flutter/domain/cubit/model_cubit.dart';
 import 'package:dwarf_flutter/utils/extensions.dart';
+import 'package:dwarf_flutter/widgets/components/frosted_glass.dart';
 import 'package:dwarf_flutter/widgets/components/generic_badge.dart';
 import 'package:dwarf_flutter/widgets/components/loading_indicator.dart';
 import 'package:dwarf_flutter/widgets/pages/tab_scaffold.dart';
@@ -36,7 +37,7 @@ class ExpenseTab extends StatefulWidget {
         // ),
       ],
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add_rounded),
+        child: Icon(CupertinoIcons.add), //Icon(Icons.add_rounded),
         onPressed: () => Navigator.of(context).pushNamed(
           ExpenseDetailPage.routeName,
           arguments: Expense.create(),
@@ -83,18 +84,15 @@ class _ExpenseTabState extends State<ExpenseTab> {
         sort: false,
         groupSeparatorBuilder: (date) => Material(
           color: Theme.of(context).scaffoldBackgroundColor,
-          elevation: 1.5,
+          elevation: 0.5,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              // mainAxisSize: MainAxisSize.min,
+              // mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                // GenericBadge(
-                //   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-                //   text: date.longDateFormat,
-                //   textStyle: Theme.of(context).textTheme.headline6?.copyWith(fontSize: 24.0),
-                // ),
+                // GenericBadge(text: date.mediumDateFormat),
                 Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
