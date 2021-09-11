@@ -1,7 +1,5 @@
-import 'package:badges/badges.dart';
 import 'package:dwarf_flutter/domain/cubit/model_cubit.dart';
 import 'package:dwarf_flutter/utils/extensions.dart';
-import 'package:dwarf_flutter/widgets/components/frosted_glass.dart';
 import 'package:dwarf_flutter/widgets/components/generic_badge.dart';
 import 'package:dwarf_flutter/widgets/components/loading_indicator.dart';
 import 'package:dwarf_flutter/widgets/pages/tab_scaffold.dart';
@@ -100,11 +98,11 @@ class _ExpenseTabState extends State<ExpenseTab> {
                       Text(
                         //date.longMonthFormat,
                         date.mediumDateFormat,
-                        style: Theme.of(context).textTheme.headline6?.copyWith(fontSize: 24.0),
+                        style: Theme.of(context).textTheme.headline6,
                       ),
                       Text(
                         state.models.where((element) => element.createTime.getDatePart(day: groupByDay) == date).map((e) => e.price).reduce((value, e) => value + e).toStringWithOptions(leading: "₺ "),
-                        style: Theme.of(context).textTheme.headline6?.copyWith(fontSize: 24.0),
+                        style: Theme.of(context).textTheme.headline6,
                       ),
                     ],
                   ),

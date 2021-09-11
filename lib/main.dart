@@ -29,7 +29,6 @@ class KumaApp extends StatelessWidget {
 
     final appTheme = CupertinoAppTheme(
       primaryColor: primaryColor,
-      // icons: MaterialAppIcons(),
     );
 
     return Provider<AppTheme>.value(

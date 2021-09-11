@@ -244,7 +244,7 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
       category,
       price,
       date,
-      expenseType,
+      // expenseType,
     ];
   }
 

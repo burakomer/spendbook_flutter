@@ -171,6 +171,7 @@ class _SummaryTabState extends State<SummaryTab> {
                   final categoryName = byCategory[0].categoryName;
                   return PieChartSectionData(
                     badgeWidget: GenericBadge(
+                      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                       text: totalCategoryExpense.toStringWithOptions(leading: "₺ "),
                       textStyle: TextStyle(fontSize: fontSize, fontWeight: FontWeight.w500),
                     ),
