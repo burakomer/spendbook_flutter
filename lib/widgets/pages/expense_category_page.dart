@@ -55,7 +55,7 @@ class _ExpenseCategoryPageState extends State<ExpenseCategoryPage> {
           return RefreshIndicator(
             child: ListView.builder(
               physics: AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: 12.0),
+              padding: EdgeInsets.symmetric(horizontal: 12.0, vertical:8.0),
               itemCount: state.models.length,
               itemBuilder: (context, index) => buildListItem(context, index, state.models[index]),
             ),

@@ -23,9 +23,6 @@ class KumaApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Colors.indigo;
-    final darkColorValue = 20;
-    final darkColor = Color.fromARGB(255, darkColorValue, darkColorValue, darkColorValue);
-    final lightColor = Colors.white;
 
     final appTheme = CupertinoAppTheme(
       primaryColor: primaryColor,
@@ -41,11 +38,10 @@ class KumaApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             themeMode: ThemeMode.system,
             theme: appTheme.getThemeData(
-              modeColor: lightColor,
               brightness: Brightness.light,
             ),
             darkTheme: appTheme.getThemeData(
-              modeColor: Colors.black, //darkColor,
+              brightnessModeColor: Colors.black, //darkColor,
               brightness: Brightness.dark,
             ),
             home: MainPage(),

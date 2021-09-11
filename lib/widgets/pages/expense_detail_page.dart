@@ -41,6 +41,8 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
   final expenseCubit = getIt<ExpenseCubit>();
   final autocompleteCubit = ExpenseCubit();
 
+  final _nameController = TextEditingController();
+  final _nameNode = FocusNode();
   final _categoryController = TextEditingController();
   final _createTimeController = TextEditingController();
 
@@ -123,6 +125,8 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
 
   List<Widget> _buildFields() {
     final name = AutocompleteTextField<Expense>(
+      controller: _nameController,
+      focusNode: _nameNode,
       borderRadius: AppTheme.of(context).borderRadius,
       labelText: "Name",
       initialValue: _name,
@@ -138,6 +142,7 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
           _categoryName = model.categoryName;
           _categoryColorHex = model.categoryColorHex;
           _price = model.price;
+          _nameController.text = _name;
         });
       },
       optionsBuilder: (editingValue) {

@@ -1,4 +1,5 @@
 import 'package:dwarf_flutter/domain/cubit/model_cubit.dart';
+import 'package:dwarf_flutter/theme/app_theme.dart';
 import 'package:dwarf_flutter/utils/extensions.dart';
 import 'package:dwarf_flutter/widgets/components/generic_badge.dart';
 import 'package:dwarf_flutter/widgets/components/loading_indicator.dart';
@@ -81,8 +82,9 @@ class _ExpenseTabState extends State<ExpenseTab> {
         groupBy: (element) => element.createTime.getDatePart(day: groupByDay),
         sort: false,
         groupSeparatorBuilder: (date) => Material(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          elevation: 0.5,
+          color: Colors.transparent,
+          // color: Theme.of(context).scaffoldBackgroundColor,
+          // elevation: 0.5,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
             child: Row(
@@ -90,29 +92,31 @@ class _ExpenseTabState extends State<ExpenseTab> {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                // GenericBadge(text: date.mediumDateFormat),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        //date.longMonthFormat,
-                        date.mediumDateFormat,
-                        style: Theme.of(context).textTheme.headline6,
-                      ),
-                      Text(
-                        state.models.where((element) => element.createTime.getDatePart(day: groupByDay) == date).map((e) => e.price).reduce((value, e) => value + e).toStringWithOptions(leading: "₺ "),
-                        style: Theme.of(context).textTheme.headline6,
-                      ),
-                    ],
-                  ),
-                ),
+                GenericBadge(elevation: 1, outlined: false, backgroundColor: Theme.of(context).scaffoldBackgroundColor, text: "${date.mediumDateFormat}"),
+                SizedBox(width: 8.0),
+                GenericBadge(elevation: 1, outlined: false, backgroundColor: Theme.of(context).scaffoldBackgroundColor, text: "${state.models.where((element) => element.createTime.getDatePart(day: groupByDay) == date).map((e) => e.price).reduce((value, e) => value + e).toStringWithOptions(leading: "₺ ")}"),
+                // Expanded(
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     children: [
+                //       Text(
+                //         //date.longMonthFormat,
+                //         date.mediumDateFormat,
+                //         style: Theme.of(context).textTheme.headline6,
+                //       ),
+                //       Text(
+                //         state.models.where((element) => element.createTime.getDatePart(day: groupByDay) == date).map((e) => e.price).reduce((value, e) => value + e).toStringWithOptions(leading: "₺ "),
+                //         style: Theme.of(context).textTheme.headline6,
+                //       ),
+                //     ],
+                //   ),
+                // ),
               ],
             ),
           ),
         ),
-        stickyHeaderBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        // stickyHeaderBackgroundColor: Colors.transparent,
+        // stickyHeaderBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        stickyHeaderBackgroundColor: Colors.transparent,
         indexedItemBuilder: (context, item, index) => _buildListItem(context, index, item),
         useStickyGroupSeparators: true,
         // floatingHeader: true,
@@ -144,7 +148,7 @@ class _ExpenseTabState extends State<ExpenseTab> {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text("${index + 1}. ${item.name}"),
+          Text("${item.name}"),
           Text("${item.price.toStringWithOptions(leading: "₺ ")}"), // TODO: Make leading configurable.
         ],
       ),
