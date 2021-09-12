@@ -1,3 +1,4 @@
+import 'package:dwarf_flutter/config/localization.dart';
 import 'package:dwarf_flutter/domain/cubit/model_cubit.dart';
 import 'package:dwarf_flutter/theme/app_theme.dart';
 import 'package:dwarf_flutter/widgets/components/app_scaffold.dart';
@@ -65,7 +66,7 @@ class _ExpenseCategoryDetailPageState extends State<ExpenseCategoryDetailPage> {
         }
       },
       child: AppScaffold(
-        title: _id > 0 ? "Expense Category" : "New Expense Category",
+        title: _id > 0 ? getStr(context, "expense_category"): getStr(context, "new_expense_category"),
         bottomActions: [
           _buildActionRow(),
         ],
@@ -94,7 +95,7 @@ class _ExpenseCategoryDetailPageState extends State<ExpenseCategoryDetailPage> {
 
   List<Widget> _buildFields() {
     final name = GenericTextField(
-      labelText: "Name",
+      labelText: getStr(context, "name"),
       initialValue: _name,
       required: true,
       maxLength: 20,
@@ -105,7 +106,7 @@ class _ExpenseCategoryDetailPageState extends State<ExpenseCategoryDetailPage> {
 
     final colorHex = FormColorPicker(
       controller: _colorHexController,
-      labelText: "Color Hex Code",
+      labelText: getStr(context, "color_hex_code"),
       initialValue: _colorHex,
       onSelectColor: (color) {
         setState(() {

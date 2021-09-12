@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:dwarf_flutter/config/localization.dart';
 import 'package:dwarf_flutter/domain/cubit/model_cubit.dart';
 import 'package:dwarf_flutter/theme/app_theme.dart';
 import 'package:dwarf_flutter/utils/extensions.dart';
@@ -96,7 +97,7 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
         }
       },
       child: AppScaffold(
-        title: _id > 0 ? "Expense" : "New Expense",
+        title: _id > 0 ? getStr(context, "expense") : getStr(context, "new_expense"),
         bottomActions: [
           Expanded(child: _buildActionRow()),
         ],
@@ -128,7 +129,7 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
       controller: _nameController,
       focusNode: _nameNode,
       borderRadius: AppTheme.of(context).borderRadius,
-      labelText: "Name",
+      labelText: getStr(context, "name"),
       initialValue: _name,
       required: true,
       onSaved: (value) {
@@ -177,7 +178,7 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
 
     final category = ModelSelectionField<ExpenseCategory>(
       controller: _categoryController,
-      labelText: "Category",
+      labelText: getStr(context, "category"),
       initialId: _categoryId,
       initialValue: _categoryName,
       routeName: ExpenseCategoryPage.routeName,
@@ -201,7 +202,7 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
 
     final price = GenericTextField(
       key: Key(_price.toString()),
-      labelText: "Price",
+      labelText: getStr(context, "price"),
       initialValue: _price.toStringWithOptions(formatted: false, emptyIfNegative: true),
       required: true,
       keyboardType: TextInputType.numberWithOptions(decimal: true),
@@ -213,7 +214,7 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
 
     final date = DateTimeField(
       controller: _createTimeController,
-      labelText: "Date",
+      labelText: getStr(context, "date"),
       initialDate: _createTime,
       firstDate: DateTime(2021),
       lastDate: DateTime.now(),

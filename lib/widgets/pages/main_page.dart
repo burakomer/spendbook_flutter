@@ -1,3 +1,4 @@
+import 'package:dwarf_flutter/config/localization.dart';
 import 'package:dwarf_flutter/theme/app_theme.dart';
 import 'package:dwarf_flutter/widgets/pages/tab_page_scaffold.dart';
 import 'package:dwarf_flutter/widgets/pages/tab_scaffold.dart';
@@ -31,9 +32,9 @@ class _MainPageState extends State<MainPage> {
       initialTab: 1,
       tabBuilder: _buildTabs,
       tabButtons: [
-        BottomNavigationBarItem(icon: Icon(AppTheme.of(context).icons.pieChart), label: describeEnum(MainPageTabs.Summary)),
-        BottomNavigationBarItem(icon: Icon(AppTheme.of(context).icons.receiptLong), label: describeEnum(MainPageTabs.Expenses)),
-        BottomNavigationBarItem(icon: Icon(AppTheme.of(context).icons.settings), label: describeEnum(MainPageTabs.Settings)),
+        BottomNavigationBarItem(icon: Icon(AppTheme.of(context).icons.pieChart), label: getStr(context, "summary")),
+        BottomNavigationBarItem(icon: Icon(AppTheme.of(context).icons.receiptLong), label: getStr(context, "expenses")),
+        BottomNavigationBarItem(icon: Icon(AppTheme.of(context).icons.settings), label: getStr(context, "settings")),
       ],
     );
   }

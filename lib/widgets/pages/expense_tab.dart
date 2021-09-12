@@ -1,3 +1,4 @@
+import 'package:dwarf_flutter/config/localization.dart';
 import 'package:dwarf_flutter/domain/cubit/model_cubit.dart';
 import 'package:dwarf_flutter/theme/app_theme.dart';
 import 'package:dwarf_flutter/utils/extensions.dart';
@@ -25,7 +26,7 @@ class ExpenseTab extends StatefulWidget {
 
   static TabScaffold getTabScaffold(BuildContext context) {
     return TabScaffold(
-      title: describeEnum(MainPageTabs.Expenses),
+      title: getStr(context, "expenses"),
       body: ExpenseTab(),
       actions: [
         // IconButton(

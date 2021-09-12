@@ -1,3 +1,4 @@
+import 'package:dwarf_flutter/config/localization.dart';
 import 'package:dwarf_flutter/domain/cubit/model_cubit.dart';
 import 'package:dwarf_flutter/theme/app_theme.dart';
 import 'package:dwarf_flutter/utils/extensions.dart';
@@ -36,7 +37,7 @@ class _ExpenseCategoryPageState extends State<ExpenseCategoryPage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: "Expense Categories",
+      title: getStr(context, "expense_categories"),
       body: _buildBody(context),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add_rounded),

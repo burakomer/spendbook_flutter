@@ -1,9 +1,14 @@
+import 'package:dwarf_flutter/config/localization.dart';
 import 'package:dwarf_flutter/theme/app_theme.dart';
 import 'package:dwarf_flutter/theme/cupertino_app_theme.dart';
 import 'package:dwarf_flutter/widgets/pages/route_not_found_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:kuma_app/config/kuma_localization.dart';
 import 'package:provider/provider.dart';
+
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'data/models/expense.dart';
 import 'data/models/expense_category.dart';
@@ -27,12 +32,25 @@ class KumaApp extends StatelessWidget {
       primaryColor: primaryColor,
     );
 
-    return Provider<AppTheme>.value(
-      value: appTheme,
+    final localization = KumaLocalization();
+
+    return MultiProvider(
+      providers: [
+        Provider<AppTheme>.value(value: appTheme),
+        Provider<Localization>.value(value: localization),
+      ],
       builder: (context, child) {
         return GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: MaterialApp(
+            supportedLocales: [
+              Locale("en"),
+              Locale("tr"),
+            ],
+            localizationsDelegates: [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+            ],
             title: 'Kuma App',
             debugShowCheckedModeBanner: false,
             themeMode: ThemeMode.system,

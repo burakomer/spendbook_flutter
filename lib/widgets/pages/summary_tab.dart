@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:dwarf_flutter/config/localization.dart';
 import 'package:dwarf_flutter/domain/cubit/model_cubit.dart';
 import 'package:dwarf_flutter/theme/app_theme.dart';
 import 'package:dwarf_flutter/utils/extensions.dart';
@@ -34,7 +35,7 @@ class SummaryTab extends StatefulWidget {
     required DateTime initialMonth,
   }) {
     return TabScaffold(
-      title: "${describeEnum(MainPageTabs.Summary)} - ${initialMonth.mediumMonthFormat}",
+      title: "${getStr(context, "summary")} - ${initialMonth.mediumMonthFormat}",
       body: SummaryTab(month: initialMonth),
       actions: [
         IconButton(
