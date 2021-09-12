@@ -28,7 +28,7 @@ class KumaApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Colors.indigo;
-    final appTheme = CupertinoAppTheme(
+    final appTheme = AppTheme(
       primaryColor: primaryColor,
     );
 
