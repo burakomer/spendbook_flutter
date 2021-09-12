@@ -1,6 +1,8 @@
 import 'package:dwarf_flutter/domain/cubit/model_cubit.dart';
+import 'package:dwarf_flutter/theme/app_theme.dart';
 import 'package:dwarf_flutter/utils/extensions.dart';
 import 'package:dwarf_flutter/widgets/components/app_scaffold.dart';
+import 'package:dwarf_flutter/widgets/components/generic_badge.dart';
 import 'package:dwarf_flutter/widgets/components/loading_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -53,9 +55,10 @@ class _ExpenseCategoryPageState extends State<ExpenseCategoryPage> {
         if (state is ExpenseCategorysReady) {
           pulledDownToRefresh = false;
           return RefreshIndicator(
+            backgroundColor: AppTheme.getCurrentModeColor(context, darkAccent: true),
             child: ListView.builder(
               physics: AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: 12.0, vertical:8.0),
+              padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
               itemCount: state.models.length,
               itemBuilder: (context, index) => buildListItem(context, index, state.models[index]),
             ),
@@ -78,7 +81,9 @@ class _ExpenseCategoryPageState extends State<ExpenseCategoryPage> {
 
   Widget buildListItem(BuildContext context, int index, ExpenseCategory item) {
     return Card(
+      elevation: 0.0,
       margin: const EdgeInsets.symmetric(vertical: 4.0),
+      // padding: const EdgeInsets.symmetric(vertical: 4.0),
       color: item.color,
       child: ListTile(
         // visualDensity: VisualDensity.compact,

@@ -23,7 +23,6 @@ class KumaApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Colors.indigo;
-
     final appTheme = CupertinoAppTheme(
       primaryColor: primaryColor,
     );
@@ -41,7 +40,6 @@ class KumaApp extends StatelessWidget {
               brightness: Brightness.light,
             ),
             darkTheme: appTheme.getThemeData(
-              brightnessModeColor: Colors.black, //darkColor,
               brightness: Brightness.dark,
             ),
             home: MainPage(),

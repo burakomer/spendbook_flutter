@@ -98,25 +98,25 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
       child: AppScaffold(
         title: _id > 0 ? "Expense" : "New Expense",
         bottomActions: [
-          _buildActionRow(),
+          Expanded(child: _buildActionRow()),
         ],
         body: isSaving
             ? LoadingIndicator(center: true)
             : SingleChildScrollView(
-                child: Container(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      ModelForm(
-                        bloc: expenseCubit,
-                        key: formKey,
-                        fields: _buildFields(),
-                        item: item,
-                        getCurrentModel: getCurrentModel,
-                        setSavingState: () => setState(() => isSaving = true),
-                      ),
-                    ],
-                  ),
+              // keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  children: [
+                    ModelForm(
+                      bloc: expenseCubit,
+                      key: formKey,
+                      fields: _buildFields(),
+                      item: item,
+                      getCurrentModel: getCurrentModel,
+                      setSavingState: () => setState(() => isSaving = true),
+                    ),
+                  ],
                 ),
               ),
       ),
@@ -256,14 +256,12 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
   var val = ExpenseTypes.OneTime;
 
   Widget _buildActionRow() {
-    return Expanded(
-      child: FormActionRow(
-        showDelete: _id > 0,
-        onSave: () async => await formKey.currentState!.submit(),
-        onDelete: () => formKey.currentState!.submit(deleting: true),
-        saveIcon: AppTheme.of(context).icons.save,
-        deleteIcon: AppTheme.of(context).icons.delete,
-      ),
+    return FormActionRow(
+      showDelete: _id > 0,
+      onSave: () async => await formKey.currentState!.submit(),
+      onDelete: () => formKey.currentState!.submit(deleting: true),
+      saveIcon: AppTheme.of(context).icons.save,
+      deleteIcon: AppTheme.of(context).icons.delete,
     );
   }
 }

@@ -171,6 +171,8 @@ class _SummaryTabState extends State<SummaryTab> {
                   final categoryName = byCategory[0].categoryName;
                   return PieChartSectionData(
                     badgeWidget: GenericBadge(
+                      color: AppTheme.getCurrentModeColor(context, darkAccent: true),
+                      outlined: false,
                       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                       text: totalCategoryExpense.toStringWithOptions(leading: "₺ "),
                       textStyle: TextStyle(fontSize: fontSize, fontWeight: FontWeight.w500),
@@ -179,7 +181,7 @@ class _SummaryTabState extends State<SummaryTab> {
                     // badgePositionPercentageOffset: -0.3,
                     badgePositionPercentageOffset: 1,
                     title: "",
-                    borderSide: BorderSide(width: 10.0, color: categoryColor ?? Colors.transparent),
+                    // borderSide: BorderSide(width: 10.0, color: categoryColor ?? Colors.transparent),
                     value: totalCategoryExpense,
                     // title: totalExpense.toStringWithOptions(leading: "₺ "),
                     color: categoryColor,

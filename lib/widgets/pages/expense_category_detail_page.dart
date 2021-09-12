@@ -72,20 +72,20 @@ class _ExpenseCategoryDetailPageState extends State<ExpenseCategoryDetailPage> {
         body: isSaving
             ? LoadingIndicator(center: true)
             : SingleChildScrollView(
-                child: Container(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      ModelForm(
-                        bloc: cubit,
-                        key: formKey,
-                        fields: _buildFields(),
-                        item: item,
-                        getCurrentModel: getCurrentModel,
-                        setSavingState: () => setState(() => isSaving = true),
-                      ),
-                    ],
-                  ),
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                physics: AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  children: [
+                    ModelForm(
+                      bloc: cubit,
+                      key: formKey,
+                      fields: _buildFields(),
+                      item: item,
+                      getCurrentModel: getCurrentModel,
+                      setSavingState: () => setState(() => isSaving = true),
+                    ),
+                  ],
                 ),
               ),
       ),
