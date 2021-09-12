@@ -98,42 +98,44 @@ class _ExpenseTabState extends State<ExpenseTab> {
           // color: Theme.of(context).scaffoldBackgroundColor,
           // elevation: 0.5,
           shape: Theme.of(context).appBarTheme.shape,
-          child: Material(
-            color: AppTheme.getCurrentModeColor(context, darkAccent: true),
-            elevation: Theme.of(context).appBarTheme.elevation ?? 0.0,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-              child: Row(
-                // mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // GenericBadge(elevation: 1, outlined: false, backgroundColor: Theme.of(context).scaffoldBackgroundColor, text: "${date.mediumDateFormat}"),
-                  // SizedBox(width: 8.0),
-                  // GenericBadge(elevation: 1, outlined: false, backgroundColor: Theme.of(context).scaffoldBackgroundColor, text: "${state.models.where((element) => element.createTime.getDatePart(day: groupByDay) == date).map((e) => e.price).reduce((value, e) => value + e).toStringWithOptions(leading: "₺ ")}"),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          //date.longMonthFormat,
-                          date.mediumDateFormat,
-                          style: Theme.of(context).textTheme.headline6,
-                        ),
-                        Text(
-                          state.models.where((element) => element.createTime.getDatePart(day: groupByDay) == date).map((e) => e.price).reduce((value, e) => value + e).toStringWithOptions(leading: "₺ "),
-                          style: Theme.of(context).textTheme.headline6,
-                        ),
-                      ],
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16.0),
+            child: Row(
+              // mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // GenericBadge(elevation: 1, outlined: false, backgroundColor: Theme.of(context).scaffoldBackgroundColor, text: "${date.mediumDateFormat}"),
+                // SizedBox(width: 8.0),
+                // GenericBadge(elevation: 1, outlined: false, backgroundColor: Theme.of(context).scaffoldBackgroundColor, text: "${state.models.where((element) => element.createTime.getDatePart(day: groupByDay) == date).map((e) => e.price).reduce((value, e) => value + e).toStringWithOptions(leading: "₺ ")}"),
+                Expanded(
+                  child: Card(
+                    elevation: 1.5,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            //date.longMonthFormat,
+                            date.mediumDateFormat,
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                          Text(
+                            state.models.where((element) => element.createTime.getDatePart(day: groupByDay) == date).map((e) => e.price).reduce((value, e) => value + e).toStringWithOptions(leading: "₺ "),
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
-        stickyHeaderBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        // stickyHeaderBackgroundColor: Colors.transparent,
+        // stickyHeaderBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        stickyHeaderBackgroundColor: Colors.transparent,
         indexedItemBuilder: (context, item, index) => _buildListItem(context, index, item),
         useStickyGroupSeparators: true,
         // floatingHeader: true,

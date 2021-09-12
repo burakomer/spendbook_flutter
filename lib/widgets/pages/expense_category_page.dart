@@ -82,7 +82,7 @@ class _ExpenseCategoryPageState extends State<ExpenseCategoryPage> {
 
   Widget buildListItem(BuildContext context, int index, ExpenseCategory item) {
     return Card(
-      elevation: 0.0,
+      elevation: 2.0,
       margin: const EdgeInsets.symmetric(vertical: 4.0),
       // padding: const EdgeInsets.symmetric(vertical: 4.0),
       color: item.color,
