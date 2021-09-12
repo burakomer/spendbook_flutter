@@ -4,6 +4,7 @@ import 'package:dwarf_flutter/theme/app_theme.dart';
 import 'package:dwarf_flutter/utils/extensions.dart';
 import 'package:dwarf_flutter/widgets/components/generic_badge.dart';
 import 'package:dwarf_flutter/widgets/components/loading_indicator.dart';
+import 'package:dwarf_flutter/widgets/components/refreshable.dart';
 import 'package:dwarf_flutter/widgets/pages/tab_scaffold.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
@@ -96,7 +97,11 @@ class _SummaryTabState extends State<SummaryTab> {
         ),
       );
 
-    return RefreshIndicator(
+    return Refreshable(
+      onRefresh: () async {
+        await expenseCubit.load(emitLoading: false);
+        pulledDownToRefresh = true;
+      },
       child: ListView(
         physics: AlwaysScrollableScrollPhysics(),
         children: [
@@ -128,10 +133,6 @@ class _SummaryTabState extends State<SummaryTab> {
           _buildPieChart(context, models),
         ],
       ),
-      onRefresh: () async {
-        await expenseCubit.load(emitLoading: false);
-        pulledDownToRefresh = true;
-      },
     );
   }
 

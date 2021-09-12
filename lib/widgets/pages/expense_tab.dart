@@ -3,6 +3,7 @@ import 'package:dwarf_flutter/theme/app_theme.dart';
 import 'package:dwarf_flutter/utils/extensions.dart';
 import 'package:dwarf_flutter/widgets/components/generic_badge.dart';
 import 'package:dwarf_flutter/widgets/components/loading_indicator.dart';
+import 'package:dwarf_flutter/widgets/components/refreshable.dart';
 import 'package:dwarf_flutter/widgets/pages/tab_scaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -74,8 +75,11 @@ class _ExpenseTabState extends State<ExpenseTab> {
     final groupByDay = true;
     pulledDownToRefresh = false;
 
-    return RefreshIndicator(
-      backgroundColor: AppTheme.getCurrentModeColor(context, darkAccent: true),
+    return Refreshable(
+      onRefresh: () async {
+        await expenseCubit.load(emitLoading: false);
+        pulledDownToRefresh = true;
+      },
       // child: ListView.builder(
       //   physics: AlwaysScrollableScrollPhysics(),
       //   padding: EdgeInsets.zero,
@@ -133,10 +137,6 @@ class _ExpenseTabState extends State<ExpenseTab> {
         useStickyGroupSeparators: true,
         // floatingHeader: true,
       ),
-      onRefresh: () async {
-        await expenseCubit.load(emitLoading: false);
-        pulledDownToRefresh = true;
-      },
     );
   }
 
