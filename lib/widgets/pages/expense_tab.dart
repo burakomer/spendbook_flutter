@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:dwarf_flutter/config/localization.dart';
 import 'package:dwarf_flutter/domain/cubit/model_cubit.dart';
 import 'package:dwarf_flutter/theme/app_theme.dart';
@@ -10,7 +11,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:grouped_list/grouped_list.dart';
+import 'package:collection/collection.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 
 import '../../data/models/expense.dart';
 import '../../domain/expense/expense_cubit.dart';
@@ -25,6 +29,8 @@ class ExpenseTab extends StatefulWidget {
   _ExpenseTabState createState() => _ExpenseTabState();
 
   static TabScaffold getTabScaffold(BuildContext context) {
+    final expenseCubit = getIt<ExpenseCubit>();
+
     return TabScaffold(
       title: getStr(context, "expenses"),
       body: ExpenseTab(),
@@ -37,13 +43,36 @@ class ExpenseTab extends StatefulWidget {
         //   ),
         // ),
       ],
-      floatingActionButton: FloatingActionButton(
-        child: Icon(CupertinoIcons.add), //Icon(Icons.add_rounded),
-        onPressed: () => Navigator.of(context).pushNamed(
-          ExpenseDetailPage.routeName,
-          arguments: Expense.create(),
-        ),
+      floatingActionButton: OpenContainer(
+        transitionDuration: Duration(milliseconds: 350),
+        closedShape: CircleBorder(),
+        closedColor: Theme.of(context).colorScheme.primary,
+        closedElevation: 6,
+        closedBuilder: (context, openContainer) {
+          return FloatingActionButton(
+            // mini: true,
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            child: Icon(CupertinoIcons.add), //Icon(Icons.add_rounded),
+            onPressed: openContainer,
+          );
+        },
+        openBuilder: (context, closedContainer) {
+          return ExpenseDetailPage(item: Expense.create());
+        },
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   child: Icon(CupertinoIcons.add), //Icon(Icons.add_rounded),
+      //   onPressed: () => Navigator.of(context).pushNamed(
+      //     ExpenseDetailPage.routeName,
+      //     arguments: Expense.create(),
+      //   ),
+      // ),
+      refreshable: true,
+      onRefresh: () async {
+        await expenseCubit.load(emitLoading: false);
+        // pulledDownToRefresh = true;
+      },
     );
   }
 }
@@ -59,16 +88,78 @@ class _ExpenseTabState extends State<ExpenseTab> {
       bloc: expenseCubit,
       builder: (context, state) {
         if (state is ExpensesReady) {
-          return _buildList(context, state);
+          return _buildSliverList(context, state);
+          // return _buildList(context, state);
         } else if (state is ExpensesError) {
           return Center(child: Text(state.message));
-        } else if (state is ExpensesLoading) {
-          return pulledDownToRefresh ? SizedBox() : LoadingIndicator(center: true);
-        } else {
+        }
+        // else if (state is ExpensesLoading) {
+        //   return pulledDownToRefresh ? SizedBox() : LoadingIndicator(center: true);
+        // }
+        else {
           expenseCubit.load();
-          return LoadingIndicator(center: true);
+          return SliverToBoxAdapter(child: LoadingIndicator());
+          // return LoadingIndicator(center: true);
         }
       },
+    );
+  }
+
+  Widget _buildSliverList(BuildContext context, ExpensesReady state) {
+    final groupByDay = true;
+    pulledDownToRefresh = false;
+
+    final groupedList = state.models.groupListsBy((e) => e.createTime.getDatePart(day: groupByDay));
+
+    // return SliverList(
+    //   delegate: SliverChildBuilderDelegate(
+    //     (context, index) => _buildListItem(context, index, state.models[index]),
+    //     childCount: state.models.length,
+    //   ),
+    // );
+
+    return MultiSliver(
+      children: groupedList.entries.map(
+        (e) {
+          final date = e.key;
+          final items = e.value;
+          return SliverStickyHeader(
+            header: Container(
+              height: 60.0,
+              // color: (headerState.isPinned ? Colors.pink : Colors.lightBlue).withOpacity(1.0 - headerState.scrollPercentage),
+              padding: EdgeInsets.symmetric(horizontal: 12.0),
+              alignment: Alignment.centerLeft,
+              child: Card(
+                elevation: 1.5,
+                // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        //date.longMonthFormat,
+                        date.mediumDateFormat,
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                      Text(
+                        state.models.where((element) => element.createTime.getDatePart(day: groupByDay) == date).map((e) => e.price).reduce((value, e) => value + e).toStringWithOptions(leading: "₺ "),
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, i) => _buildListItem(context, i, items[i]),
+                childCount: items.length,
+              ),
+            ),
+          );
+        },
+      ).toList(),
     );
   }
 
@@ -88,6 +179,7 @@ class _ExpenseTabState extends State<ExpenseTab> {
       //   itemBuilder: (context, index) => _buildListItem(context, index, state.models[index]),
       // ),
       child: GroupedListView<Expense, DateTime>(
+        // primary: false,
         shrinkWrap: true,
         physics: AlwaysScrollableScrollPhysics(),
         elements: state.models,
@@ -154,31 +246,67 @@ class _ExpenseTabState extends State<ExpenseTab> {
 
     final priceText = Text("${item.price.toStringWithOptions(leading: "₺ ")}");
 
-    return ListTile(
-      visualDensity: VisualDensity.compact,
-      horizontalTitleGap: 8.0,
-      // trailing: Icon(AppTheme.of(context).icons.chevronRight),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text("${item.name}"),
-          priceText,
-          // categoryText,
-        ],
-      ),
-      subtitle: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text("${item.createTime.longDateFormatWithTime}"),
-          // category,
-          categoryText,
-          // priceText,
-        ],
-      ),
-      onTap: () => Navigator.of(context).pushNamed(
-        ExpenseDetailPage.routeName,
-        arguments: item,
-      ),
+    return OpenContainer(
+      transitionDuration: Duration(milliseconds: 350),
+      closedColor: AppTheme.getCurrentModeColor(context),
+      openColor: AppTheme.getCurrentModeColor(context),
+      closedElevation: 0.0,
+      openElevation: 0.0,
+      closedBuilder: (context, openContainer) {
+        return ListTile(
+          // visualDensity: VisualDensity.compact,
+          // horizontalTitleGap: 8.0,
+          // trailing: Icon(AppTheme.of(context).icons.chevronRight),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("${item.name}"),
+              priceText,
+              // categoryText,
+            ],
+          ),
+          subtitle: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("${item.createTime.longDateFormatWithTime}"),
+              // category,
+              categoryText,
+              // priceText,
+            ],
+          ),
+          onTap: () => openContainer(),
+        );
+      },
+      openBuilder: (context, closedContainer) {
+        return ExpenseDetailPage(item: item);
+      },
     );
+
+    // return ListTile(
+    //   visualDensity: VisualDensity.compact,
+    //   horizontalTitleGap: 8.0,
+    //   // trailing: Icon(AppTheme.of(context).icons.chevronRight),
+    //   title: Row(
+    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //     children: [
+    //       Text("${item.name}"),
+    //       priceText,
+    //       // categoryText,
+    //     ],
+    //   ),
+    //   subtitle: Row(
+    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //     children: [
+    //       Text("${item.createTime.longDateFormatWithTime}"),
+    //       // category,
+    //       categoryText,
+    //       // priceText,
+    //     ],
+    //   ),
+    //   onTap: () => Navigator.of(context).pushNamed(
+    //     ExpenseDetailPage.routeName,
+    //     arguments: item,
+    //   ),
+    // );
   }
 }

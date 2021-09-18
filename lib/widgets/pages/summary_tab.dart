@@ -34,6 +34,8 @@ class SummaryTab extends StatefulWidget {
     required void Function(DateTime) onSelectMonth,
     required DateTime initialMonth,
   }) {
+    final expenseCubit = getIt<ExpenseCubit>();
+
     return TabScaffold(
       title: "${getStr(context, "summary")} - ${initialMonth.mediumMonthFormat}",
       body: SummaryTab(month: initialMonth),
@@ -60,14 +62,16 @@ class SummaryTab extends StatefulWidget {
               },
             )
           : null,
+      refreshable: true,
+      onRefresh: () async {
+        await expenseCubit.load(emitLoading: false);
+      },
     );
   }
 }
 
 class _SummaryTabState extends State<SummaryTab> {
   final expenseCubit = getIt<ExpenseCubit>();
-
-  bool pulledDownToRefresh = false;
 
   @override
   Widget build(BuildContext context) {
@@ -78,9 +82,11 @@ class _SummaryTabState extends State<SummaryTab> {
           return _buildList(context, state);
         } else if (state is ExpensesError) {
           return Center(child: Text(state.message));
-        } else if (state is ExpensesLoading) {
-          return pulledDownToRefresh ? SizedBox() : LoadingIndicator(center: true);
-        } else {
+        } 
+        // else if (state is ExpensesLoading) {
+        //   return pulledDownToRefresh ? SizedBox() : LoadingIndicator(center: true);
+        // } 
+        else {
           expenseCubit.load(); // TODO: Filter the month only.
           return LoadingIndicator(center: true);
         }
@@ -90,22 +96,24 @@ class _SummaryTabState extends State<SummaryTab> {
 
   Widget _buildList(BuildContext context, ExpensesReady state) {
     final models = state.models.where((element) => element.createTime.mediumMonthFormat == widget.month.mediumMonthFormat).toList();
-    if (models.isEmpty)
-      return Center(
-        child: Text(
-          "No Data",
-          style: Theme.of(context).textTheme.headline6,
+    if (models.isEmpty) {
+      final height = MediaQuery.of(context).size.height / 3;
+      return SliverToBoxAdapter(
+        child: Container(
+          margin: EdgeInsets.only(top: height),
+          child: Column(
+            children: [
+              Icon(Icons.money_off_rounded, size: 32.0),
+              SizedBox(height: 4.0),
+              Text("No Data", style: Theme.of(context).textTheme.headline6),
+            ],
+          ),
         ),
       );
-
-    return Refreshable(
-      onRefresh: () async {
-        await expenseCubit.load(emitLoading: false);
-        pulledDownToRefresh = true;
-      },
-      child: ListView(
-        physics: AlwaysScrollableScrollPhysics(),
-        children: [
+    }
+    return SliverList(
+      delegate: SliverChildListDelegate(
+        [
           SingleChildScrollView(
             padding: const EdgeInsets.all(12.0),
             scrollDirection: Axis.horizontal,
@@ -135,11 +143,14 @@ class _SummaryTabState extends State<SummaryTab> {
         ],
       ),
     );
+    // return ListView(
+    //   primary: false,
+    //   physics: AlwaysScrollableScrollPhysics(),
+    //   children: [],
+    // );
   }
 
   Widget _buildPieChart(BuildContext context, List<Expense> expenses) {
-    pulledDownToRefresh = false;
-
     final fontSize = 16.0;
     final radius = 80.0;
 

@@ -86,32 +86,35 @@ class _ExpenseCategoryPageState extends State<ExpenseCategoryPage> {
       margin: const EdgeInsets.symmetric(vertical: 4.0),
       // padding: const EdgeInsets.symmetric(vertical: 4.0),
       color: item.color,
-      child: ListTile(
-        // visualDensity: VisualDensity.compact,
-        horizontalTitleGap: 8.0,
-        trailing: Icon(Icons.chevron_right_rounded),
-        title: Row(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text("${index + 1}. ${item.name}", style: TextStyle(color: item.color.contrastingTextColor())),
-            // Text("${index + 1}. "),
-            // GenericBadge(
-            //   text: "${item.name}",
-            //   textStyle: TextStyle(color: item.color.contrastingTextColor()),
-            //   color: item.color,
-            // ),
-          ],
-        ),
-        // subtitle: Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //   children: [],
-        // ),
+      child: InkWell(
         onTap: () => widget.pickerMode
             ? Navigator.of(context).pop(item)
             : Navigator.of(context).pushNamed(
                 ExpenseCategoryDetailPage.routeName,
                 arguments: item,
               ),
+        customBorder: Theme.of(context).cardTheme.shape,
+        child: ListTile(
+          // visualDensity: VisualDensity.compact,
+          horizontalTitleGap: 8.0,
+          trailing: Icon(Icons.chevron_right_rounded),
+          title: Row(
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("${index + 1}. ${item.name}", style: TextStyle(color: item.color.contrastingTextColor())),
+              // Text("${index + 1}. "),
+              // GenericBadge(
+              //   text: "${item.name}",
+              //   textStyle: TextStyle(color: item.color.contrastingTextColor()),
+              //   color: item.color,
+              // ),
+            ],
+          ),
+          // subtitle: Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [],
+          // ),
+        ),
       ),
     );
   }

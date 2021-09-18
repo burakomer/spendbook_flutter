@@ -45,6 +45,9 @@ dependencies:
   grouped_list: ^4.1.0
   fl_chart: ^0.40.0
   collection: ^1.15.0
+  flutter_sticky_header: ^0.6.0
+  sliver_tools: ^0.2.5
+  animations: ^2.0.1
 
 dev_dependencies:
   flutter_test:

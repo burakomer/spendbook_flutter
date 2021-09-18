@@ -69,7 +69,7 @@ class KumaApp extends StatelessWidget {
   }
 }
 
-class AppRoute<T> extends CupertinoPageRoute<T> {
+class AppRoute<T> extends MaterialPageRoute<T> {
   AppRoute({
     required WidgetBuilder builder,
     RouteSettings? settings,

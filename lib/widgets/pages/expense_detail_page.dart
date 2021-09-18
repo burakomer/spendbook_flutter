@@ -104,7 +104,7 @@ class _ExpenseDetailPageState extends State<ExpenseDetailPage> {
         body: isSaving
             ? LoadingIndicator(center: true)
             : SingleChildScrollView(
-              // keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                // keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 physics: AlwaysScrollableScrollPhysics(),
                 child: Column(
