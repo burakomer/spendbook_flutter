@@ -5,12 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "kuma_app",
+            "name": "spendbook_app",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "kuma_app (profile mode)",
+            "name": "spendbook_app (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"

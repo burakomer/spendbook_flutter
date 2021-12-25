@@ -1,4 +1,4 @@
-# kuma_app
+# spendbook_app
 
 A new Flutter project.
 

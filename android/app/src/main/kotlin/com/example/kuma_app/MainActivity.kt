@@ -1,4 +1,4 @@
-package com.burakomer.kumaApp
+package com.burakomer.spendbook
 
 import io.flutter.embedding.android.FlutterActivity
 

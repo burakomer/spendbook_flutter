@@ -24,7 +24,7 @@ import WatchConnectivity
     private func initFlutterChannel() {
         if let controller = window?.rootViewController as? FlutterViewController {
             let channel = FlutterMethodChannel(
-                name: "com.burakomer.kumaApp",
+                name: "com.burakomer.spendbook",
                 binaryMessenger: controller.binaryMessenger)
             
             channel.setMethodCallHandler({ [weak self] (
@@ -68,7 +68,7 @@ extension AppDelegate: WCSessionDelegate {
         DispatchQueue.main.async {
             if let method = message["method"] as? String, let controller = self.window?.rootViewController as? FlutterViewController {
                 let channel = FlutterMethodChannel(
-                    name: "com.burakomer.kumaApp",
+                    name: "com.burakomer.spendbook",
                     binaryMessenger: controller.binaryMessenger)
                 channel.invokeMethod(method, arguments: message)
             }

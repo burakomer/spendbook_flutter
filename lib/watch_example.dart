@@ -13,7 +13,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  final channel = MethodChannel('com.burakomer.kumaApp');
+  final channel = MethodChannel('com.burakomer.spendbook');
 
   void _initFlutterChannel() {
     channel.setMethodCallHandler(

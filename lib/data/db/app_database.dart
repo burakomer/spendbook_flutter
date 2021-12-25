@@ -15,7 +15,7 @@ import '../models/expense_category.dart';
 import 'migrations.dart';
 
 class AppDatabase {
-  static const dbFileName = "db_kuma_app.db";
+  static const dbFileName = "db_spendbook_app.db";
   static Future<String> dbPath() async => join((await getApplicationDocumentsDirectory()).path, dbFileName);
 
   static Future<bool> shareDatabase() async {

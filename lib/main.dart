@@ -1,15 +1,13 @@
 import 'package:dwarf_flutter/config/localization.dart';
 import 'package:dwarf_flutter/theme/app_theme.dart';
-import 'package:dwarf_flutter/theme/cupertino_app_theme.dart';
 import 'package:dwarf_flutter/widgets/pages/route_not_found_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:kuma_app/config/kuma_localization.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
-import 'package:flutter_localizations/flutter_localizations.dart';
-
+import 'config/app_localization.dart';
 import 'data/models/expense.dart';
 import 'data/models/expense_category.dart';
 import 'locator.dart';
@@ -21,10 +19,10 @@ import 'widgets/pages/main_page.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
-  runApp(KumaApp());
+  runApp(SpendBookApp());
 }
 
-class KumaApp extends StatelessWidget {
+class SpendBookApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Colors.indigo;
@@ -32,7 +30,7 @@ class KumaApp extends StatelessWidget {
       primaryColor: primaryColor,
     );
 
-    final localization = KumaLocalization();
+    final localization = AppLocalization();
 
     return MultiProvider(
       providers: [
@@ -51,7 +49,7 @@ class KumaApp extends StatelessWidget {
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
             ],
-            title: 'Kuma App',
+            title: 'SpendBook App',
             debugShowCheckedModeBanner: false,
             themeMode: ThemeMode.system,
             theme: appTheme.getThemeData(

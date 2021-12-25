@@ -1,7 +1,7 @@
 import 'package:dwarf_flutter/config/localization.dart';
 
-class KumaLocalization extends Localization {
-  KumaLocalization()
+class AppLocalization extends Localization {
+  AppLocalization()
       : super(
           en: {
             "expense": "Expense",
